@@ -97,9 +97,17 @@ const textures = await page.evaluate(async () => {
 Object.entries(textures).forEach(([f, good]) => ok(good, `ассет ${f}`))
 
 // ── Service worker ──
-await page.waitForFunction(() => navigator.serviceWorker?.controller || window.__swWaited, { timeout: 8000 })
+// Ждём именно активации: прекеш всех шрифтов, текстур и спрайтов
+// занимает секунды, и фиксированная пауза ловила его на полпути.
+await page
+  .waitForFunction(
+    async () => {
+      const regs = await navigator.serviceWorker.getRegistrations()
+      return regs.some((r) => r.active)
+    },
+    { timeout: 25000, polling: 500 },
+  )
   .catch(() => {})
-await wait(1500)
 const sw = await page.evaluate(async () => {
   const regs = await navigator.serviceWorker.getRegistrations()
   return { count: regs.length, active: regs.some((r) => r.active) }
