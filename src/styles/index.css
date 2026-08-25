@@ -26,11 +26,11 @@
   --color-wood-dark: #16232a;
   --color-wood-light: #354a52;
 
-  /* ── Планктон: холодное свечение ── */
-  --color-orc: #1f4a4a;
-  --color-orc-dark: #12302f;
-  --color-orc-light: #2f8f80;
-  --color-orc-bright: #3ff0d0;
+  /* ── Зелень: свет фонаря на бутылочном стекле и орочья кровь ── */
+  --color-orc: #38521f;
+  --color-orc-dark: #223313;
+  --color-orc-light: #5f9631;
+  --color-orc-bright: #92d445;
 
   /* ── Масляный фонарь: тёплый свет ── */
   --color-lamp: #e0913a;
@@ -112,7 +112,7 @@
     z-index: 0;
     background:
       radial-gradient(120% 55% at 50% -8%, rgba(224, 145, 58, 0.22), transparent 60%),
-      radial-gradient(90% 40% at 50% 108%, rgba(63, 240, 208, 0.08), transparent 65%);
+      radial-gradient(90% 40% at 50% 108%, rgba(146, 212, 69, 0.1), transparent 65%);
   }
 
   body > * {
@@ -243,18 +243,18 @@
   /* ── Фонарь на цепи под потолком ── */
   .chain {
     position: fixed;
-    top: calc(var(--tg-top) - 2px);
-    right: 10px;
+    top: calc(var(--tg-top) - 4px);
+    right: 6px;
     z-index: 5;
-    width: 34px;
+    width: 60px;
     pointer-events: none;
     transform-origin: 50% 0;
     animation: lantern-swing 3.8s ease-in-out infinite;
   }
   .chain i {
     display: block;
-    width: 6px;
-    height: 26px;
+    width: 8px;
+    height: 42px;
     margin: 0 auto;
     background: repeating-linear-gradient(
       180deg,
@@ -266,7 +266,7 @@
   .chain .sprite {
     display: block;
     margin: 0 auto;
-    filter: drop-shadow(0 0 12px rgba(255, 170, 60, 0.5));
+    filter: drop-shadow(0 0 22px rgba(255, 176, 66, 0.75));
   }
 
   /* ── Рыба-трофей на стене ── */
@@ -275,8 +275,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 14px;
-    background-color: #5a3c1c;
+    padding: 10px 16px;
+    background-color: #4a3216;
     background-image: url('/textures/oak.png');
     background-size: 168px 168px;
     image-rendering: pixelated;
@@ -299,8 +299,8 @@
 
   /* ── Стойка бармена ── */
   .counter {
-    background-color: #5a3c1c;
-    background-image: url('/textures/oak.png');
+    background-color: #6a4820;
+    background-image: url('/textures/oak-lit.png');
     background-size: 168px 168px;
     image-rendering: pixelated;
     box-shadow:
@@ -397,7 +397,7 @@
     box-shadow:
       0 0 0 var(--px) var(--color-orc-bright),
       0 0 0 var(--px2) var(--color-ink-deep),
-      0 0 18px 0 rgba(63, 240, 208, 0.25);
+      0 0 18px 0 rgba(146, 212, 69, 0.25);
   }
 
   .frame-thin {
@@ -434,13 +434,13 @@
     font-weight: 800;
     letter-spacing: 0.03em;
     color: var(--color-parch);
-    background-color: #5a3c1c;
-    background-image: url('/textures/oak.png');
+    background-color: #6a4820;
+    background-image: url('/textures/oak-lit.png');
     background-size: 168px 168px;
     image-rendering: pixelated;
     box-shadow:
       0 0 0 var(--px) var(--color-ink-deep),
-      inset var(--px) var(--px) 0 0 rgba(222, 208, 171, 0.26),
+      inset var(--px) var(--px) 0 0 rgba(240, 216, 170, 0.34),
       inset calc(-1 * var(--px)) calc(-1 * var(--px)) 0 0 rgba(0, 0, 0, 0.6),
       0 var(--px2) 0 0 var(--color-ink-deep);
     transition: none;
@@ -490,7 +490,7 @@
       0 0 0 var(--px) var(--color-orc-bright),
       0 0 0 var(--px2) var(--color-ink-deep),
       inset var(--px) var(--px) 0 0 var(--color-gold-light),
-      0 0 26px 0 rgba(63, 240, 208, 0.4),
+      0 0 26px 0 rgba(146, 212, 69, 0.4),
       0 var(--px2) 0 0 var(--color-ink-deep);
   }
 
@@ -620,8 +620,8 @@
     box-shadow:
       0 0 0 3px var(--color-orc-bright),
       0 0 0 7px var(--color-ink-deep),
-      0 0 0 9px rgba(63, 240, 208, 0.45),
-      0 0 34px 2px rgba(63, 240, 208, 0.5);
+      0 0 0 9px rgba(146, 212, 69, 0.45),
+      0 0 34px 2px rgba(146, 212, 69, 0.5);
     z-index: 2;
   }
 
@@ -670,6 +670,17 @@
        смыкаются встык и подвала не видно вовсе */
     padding-left: 6px;
     padding-right: 6px;
+  }
+
+  /*
+   * Пульт занимает много места и сжиматься не умеет: на низком экране
+   * (Telegram в compact-режиме, старые телефоны) он выдавливал нижние
+   * кнопки за край. Ограничиваем его долю экрана и разрешаем прокрутку
+   * внутри — до этого дело дойдёт редко, но кнопка всегда достижима.
+   */
+  .pad-box {
+    max-height: 74%;
+    overflow-y: auto;
   }
 
   /* Отступы под чужой хром: Telegram сверху, вырез телефона снизу */
@@ -756,8 +767,8 @@ html.is-shaking body {
 
 /* Свиток стал активным — рамка коротко вспыхивает */
 @keyframes turn-pass {
-  0% { box-shadow: 0 0 0 3px var(--color-orc-bright), 0 0 0 7px var(--color-ink-deep), 0 0 0 16px rgba(63, 240, 208, 0.5), 0 0 46px 6px rgba(63, 240, 208, 0.75); }
-  100% { box-shadow: 0 0 0 3px var(--color-orc-bright), 0 0 0 7px var(--color-ink-deep), 0 0 0 9px rgba(63, 240, 208, 0.45), 0 0 34px 2px rgba(63, 240, 208, 0.5); }
+  0% { box-shadow: 0 0 0 3px var(--color-orc-bright), 0 0 0 7px var(--color-ink-deep), 0 0 0 16px rgba(146, 212, 69, 0.5), 0 0 46px 6px rgba(146, 212, 69, 0.75); }
+  100% { box-shadow: 0 0 0 3px var(--color-orc-bright), 0 0 0 7px var(--color-ink-deep), 0 0 0 9px rgba(146, 212, 69, 0.45), 0 0 34px 2px rgba(146, 212, 69, 0.5); }
 }
 .active-scroll {
   animation: turn-pass 0.4s steps(4, end);
@@ -869,6 +880,21 @@ html.is-shaking body {
 }
 .torch {
   animation: plankton 1.6s steps(2, end) infinite;
+}
+
+/* Низкий экран: пульт ужимается, чтобы всё влезло без прокрутки */
+@media (max-height: 700px) {
+  .pad-box .btn { padding-top: 0.6rem; padding-bottom: 0.6rem; }
+  .pad-box .pad-main { padding-top: 0.85rem; padding-bottom: 0.85rem; font-size: 24px; }
+  .pad-box .pad-bolt { padding-top: 0.7rem; padding-bottom: 0.7rem; font-size: 19px; }
+  .pad-box .pad-total { font-size: 34px; }
+  .pad-box .pad-street { display: none; }
+}
+@media (max-height: 560px) {
+  .pad-box .pad-main { padding-top: 0.6rem; padding-bottom: 0.6rem; font-size: 21px; }
+  .pad-box .pad-bolt { padding-top: 0.5rem; padding-bottom: 0.5rem; font-size: 17px; }
+  .pad-box .pad-total { font-size: 26px; }
+  .pad-box .btn { padding-top: 0.45rem; padding-bottom: 0.45rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

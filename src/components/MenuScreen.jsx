@@ -82,6 +82,9 @@ export default function MenuScreen() {
 
   return (
     <div className="screen pad-tg-top">
+      {/* Вывеска и обстановка прокручиваются вместе: на низком экране
+          неподвижная шапка выдавливала кнопки за край. */}
+      <div className="min-h-0 flex-1 overflow-y-auto">
       {/* ── Вывеска ── */}
       <header className="surf-orc frame-gold nailed relative mx-2 px-3 pb-4 pt-6 text-center">
         <h1 className="goth text-[68px] leading-[0.8] text-gold">{TAVERN.game}</h1>
@@ -90,8 +93,8 @@ export default function MenuScreen() {
 
         {/* Рыба-трофей на стене — гордость заведения */}
         <div className="mt-3 flex items-center justify-center gap-4">
-          <span className="trophy" role="img" aria-label="Рыба-трофей">
-            <Sprite name="fish" size={44} />
+          <span className="trophy" role="img" aria-label="Рыба-пила на доске">
+            <Sprite name="sawfish" size={96} style={{ height: 48 }} />
           </span>
           <span className="hearth h-[56px] w-[56px]" role="img" aria-label="Очаг" />
         </div>
@@ -112,7 +115,7 @@ export default function MenuScreen() {
       </header>
 
       {/* ── Команда одной строкой ── */}
-      <div className="surf-board frame mx-2 mt-1 min-h-0 flex-1 overflow-y-auto px-3 py-3">
+      <div className="surf-board frame mx-2 mb-1 mt-1 px-3 py-3">
         <p className="tiny mb-2 text-[12px] leading-none text-orc-bright">ЗА СТОЛОМ</p>
         <div className="mb-4 flex flex-wrap gap-1.5">
           {roster.map((r, i) => (
@@ -152,9 +155,10 @@ export default function MenuScreen() {
           </p>
         )}
       </div>
+      </div>
 
       {/* ── Кнопки ── */}
-      <footer className="pad-tg-bottom mx-2 mb-2 mt-1 space-y-1.5">
+      <footer className="pad-tg-bottom mx-2 mb-2 mt-1 shrink-0 space-y-1.5">
         <button
           type="button"
           className={`btn w-full py-4 text-[22px] leading-none ${codexSeen ? '' : 'btn-lamp'}`}

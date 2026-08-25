@@ -18,7 +18,8 @@
     "tg": "node tools/tg-setup.mjs",
     "check-board": "node tools/check-board.mjs",
     "check-finale": "node tools/check-finale.mjs",
-    "sfx": "node tools/gen-sfx.mjs"
+    "sfx": "node tools/gen-sfx.mjs",
+    "check-fit": "node tools/check-fit.mjs"
   },
   "dependencies": {
     "jsfxr": "^1.4.1",

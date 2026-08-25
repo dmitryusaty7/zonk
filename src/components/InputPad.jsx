@@ -63,7 +63,7 @@ export default function InputPad() {
   return (
     <section
       ref={boxRef}
-      className="surf-oak frame-gold pad-tg-bottom mx-2 shrink-0 px-2 pb-2 pt-2"
+      className="surf-oak frame-gold pad-tg-bottom pad-box mx-2 shrink-0 px-2 pb-2 pt-2"
       aria-label="Пульт записи золота"
     >
       {/* ── Чей ход и что от него требуется ── */}
@@ -92,7 +92,7 @@ export default function InputPad() {
       {/* ── Табло ── */}
       <div className="frame-thin surf-parch mb-2 flex items-center gap-2 px-2 py-1.5">
         <span className="tiny text-[12px] leading-tight text-ink/60">ЗА ХОД</span>
-        <span className="num flex-1 text-right text-[46px] leading-none text-ink">{total}</span>
+        <span className="num pad-total flex-1 text-right text-[46px] leading-none text-ink">{total}</span>
         <Coin size={24} />
         <button
           type="button"
@@ -120,7 +120,7 @@ export default function InputPad() {
       </div>
 
       {/* ── Уловы ── */}
-      <div className="mb-2 grid grid-cols-2 gap-1.5">
+      <div className="pad-street mb-2 grid grid-cols-2 gap-1.5">
         <button
           type="button"
           className="btn py-2.5 text-[16px] leading-tight"
@@ -146,7 +146,7 @@ export default function InputPad() {
       {/* ── ГЛАВНОЕ ДЕЙСТВИЕ ── */}
       <button
         type="button"
-        className={`mb-1.5 w-full py-6 text-[30px] leading-none ${
+        className={`pad-main mb-1.5 w-full py-6 text-[30px] leading-none ${
           winning ? 'btn btn-chest' : 'btn btn-gold'
         }`}
         onClick={act(writeScore, winning ? 'success' : 'medium')}
@@ -158,7 +158,7 @@ export default function InputPad() {
       {/* ── Провал хода: на бочке эта кнопка особенно нужна ── */}
       <button
         type="button"
-        className="btn btn-blood mb-2 w-full py-5 text-[24px] leading-none"
+        className="btn btn-blood pad-bolt mb-2 w-full py-5 text-[24px] leading-none"
         onClick={act(writeBolt, 'error')}
       >
         {TERMS.bolt.toUpperCase()}

@@ -16,7 +16,7 @@ export function HangingLantern() {
   return (
     <div className="chain" aria-hidden="true">
       <i />
-      <Sprite name="lantern" size={30} />
+      <Sprite name="lantern" size={54} />
     </div>
   )
 }

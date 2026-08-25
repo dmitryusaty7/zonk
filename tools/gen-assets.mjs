@@ -255,14 +255,31 @@ async function wood(size = 128) {
 // Тёплый дуб: столешница, за которой играют. Доски широкие, со свилью,
 // стыки глубокие, сучки редкие. Контраст умеренный — по столу идёт текст.
 const OAK = {
-  dark: [74, 48, 24],
-  mid: [107, 72, 36],
-  light: [140, 100, 54],
-  seam: [44, 28, 14],
-  knot: [58, 36, 18],
+  dark: [40, 26, 13],
+  mid: [58, 38, 19],
+  light: [78, 53, 27],
+  seam: [20, 13, 6],
+  knot: [30, 19, 9],
+}
+
+/** Светлый дуб — только на кнопки: они должны читаться как приподнятые. */
+const OAK_LIT = {
+  dark: [72, 48, 24],
+  mid: [98, 66, 33],
+  light: [124, 87, 45],
+  seam: [40, 25, 12],
+  knot: [56, 36, 17],
+}
+
+async function oakLit(size = 128) {
+  await oakTexture(size, OAK_LIT, 'public/textures/oak-lit.png')
 }
 
 async function oak(size = 128) {
+  await oakTexture(size, OAK, 'public/textures/oak.png')
+}
+
+async function oakTexture(size, P, out) {
   const c = new Canvas(size, size)
   const grain = fbm(size, [8, 16, 64], 8801)
   for (let y = 0; y < size; y++) {
@@ -271,22 +288,22 @@ async function oak(size = 128) {
       const stretched = grain[(y * size + ((x / 7) | 0) * 7) % (size * size)]
       const rings = Math.abs(Math.sin((y * 0.5 + stretched * 7) * 1.15))
       const t = quant(clamp01(rings * 0.55 + stretched * 0.45), 4)
-      let col = t < 0.5 ? mix(OAK.dark, OAK.mid, t / 0.5) : mix(OAK.mid, OAK.light, (t - 0.5) / 0.5)
+      let col = t < 0.5 ? mix(P.dark, P.mid, t / 0.5) : mix(P.mid, P.light, (t - 0.5) / 0.5)
 
       // стык досок: глубокая тёмная борозда и светлая фаска под ней
       const inPlank = y % 42
-      if (inPlank === 0 || inPlank === 1) col = OAK.seam
-      else if (inPlank === 2) col = mix(col, OAK.light, 0.35)
+      if (inPlank === 0 || inPlank === 1) col = P.seam
+      else if (inPlank === 2) col = mix(col, P.light, 0.35)
 
       // сучки
       const kx = x % 64, ky = y % 42
       const kd = Math.hypot(kx - 22, ky - 26)
-      if (kd < 3) col = kd < 1.6 ? OAK.knot : mix(col, OAK.knot, 0.55)
+      if (kd < 3) col = kd < 1.6 ? P.knot : mix(col, P.knot, 0.55)
 
       c.set(x, y, [...col, 255])
     }
   }
-  await c.save('public/textures/oak.png')
+  await c.save(out)
 }
 
 // ═══════════════════════ ЗАПЛЕСНЕВЕЛЫЙ КИРПИЧ ═══════════════════════
@@ -653,6 +670,7 @@ console.log('Мастерская художника открыта.')
 await parchment()
 await wood()
 await oak()
+await oakLit()
 await brick()
 await linen()
 await ribbon()
