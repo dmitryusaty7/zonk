@@ -63,7 +63,7 @@ export default function InputPad() {
   return (
     <section
       ref={boxRef}
-      className="surf-wood frame-gold pad-tg-bottom mx-2 shrink-0 px-2 pb-2 pt-2"
+      className="surf-oak frame-gold pad-tg-bottom mx-2 shrink-0 px-2 pb-2 pt-2"
       aria-label="Пульт записи золота"
     >
       {/* ── Чей ход и что от него требуется ── */}

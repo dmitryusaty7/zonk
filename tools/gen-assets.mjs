@@ -250,6 +250,104 @@ async function wood(size = 128) {
   await c.save('public/textures/wood.png')
 }
 
+// ═══════════════════════ ДУБОВЫЙ КОЗЛОВОЙ СТОЛ ═══════════════════════
+
+// Тёплый дуб: столешница, за которой играют. Доски широкие, со свилью,
+// стыки глубокие, сучки редкие. Контраст умеренный — по столу идёт текст.
+const OAK = {
+  dark: [74, 48, 24],
+  mid: [107, 72, 36],
+  light: [140, 100, 54],
+  seam: [44, 28, 14],
+  knot: [58, 36, 18],
+}
+
+async function oak(size = 128) {
+  const c = new Canvas(size, size)
+  const grain = fbm(size, [8, 16, 64], 8801)
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      // свиль тянется вдоль доски — шум растянут по горизонтали
+      const stretched = grain[(y * size + ((x / 7) | 0) * 7) % (size * size)]
+      const rings = Math.abs(Math.sin((y * 0.5 + stretched * 7) * 1.15))
+      const t = quant(clamp01(rings * 0.55 + stretched * 0.45), 4)
+      let col = t < 0.5 ? mix(OAK.dark, OAK.mid, t / 0.5) : mix(OAK.mid, OAK.light, (t - 0.5) / 0.5)
+
+      // стык досок: глубокая тёмная борозда и светлая фаска под ней
+      const inPlank = y % 42
+      if (inPlank === 0 || inPlank === 1) col = OAK.seam
+      else if (inPlank === 2) col = mix(col, OAK.light, 0.35)
+
+      // сучки
+      const kx = x % 64, ky = y % 42
+      const kd = Math.hypot(kx - 22, ky - 26)
+      if (kd < 3) col = kd < 1.6 ? OAK.knot : mix(col, OAK.knot, 0.55)
+
+      c.set(x, y, [...col, 255])
+    }
+  }
+  await c.save('public/textures/oak.png')
+}
+
+// ═══════════════════════ ЗАПЛЕСНЕВЕЛЫЙ КИРПИЧ ═══════════════════════
+
+// Стена подвала: серый камень, известковый шов, пятна плесени и сырости.
+const BRICK = {
+  stone: [62, 66, 62],
+  stoneHi: [82, 86, 80],
+  stoneLo: [46, 50, 47],
+  mortar: [38, 41, 38],
+  moss: [66, 100, 54],
+  damp: [44, 58, 60],
+}
+
+async function brick(size = 128) {
+  const c = new Canvas(size, size)
+  const rough = fbm(size, [16, 32, 64], 3311)
+  const mold = fbm(size, [4, 8], 7717)
+  const BW = 32 // ширина кирпича
+  const BH = 16 // высота ряда
+
+  for (let y = 0; y < size; y++) {
+    const row = Math.floor(y / BH)
+    const shift = row % 2 ? BW / 2 : 0 // перевязка вразбежку
+    for (let x = 0; x < size; x++) {
+      const i = y * size + x
+      const bx = (x + shift) % BW
+      const by = y % BH
+      const isMortar = bx < 2 || by < 2
+
+      let col
+      if (isMortar) {
+        col = mix(BRICK.mortar, BRICK.stoneLo, quant(rough[i], 3) * 0.4)
+      } else {
+        const t = quant(clamp01(rough[i]), 4)
+        col = t < 0.4 ? mix(BRICK.stoneLo, BRICK.stone, t / 0.4)
+          : mix(BRICK.stone, BRICK.stoneHi, (t - 0.4) / 0.6)
+        // фаска: верх кирпича светлее, низ темнее
+        if (by === 2) col = mix(col, BRICK.stoneHi, 0.4)
+        if (by === BH - 1) col = mix(col, BRICK.stoneLo, 0.5)
+      }
+
+      /*
+       * Плесень и сырость. Шум fbm жмётся к середине диапазона, поэтому
+       * порог с мягким набором почти ничего не давал: растягиваем вручную,
+       * иначе стена остаётся просто серой.
+       */
+      const m = mold[i]
+      const moss = quant(clamp01((m - 0.5) * 3.2), 4)
+      if (moss > 0) col = mix(col, BRICK.moss, moss * 0.85)
+      const damp = quant(clamp01((0.46 - m) * 3.2), 3)
+      if (damp > 0) col = mix(col, BRICK.damp, damp * 0.6)
+      // тёмные споры по краю пятна
+      if (moss > 0.3 && (x * 5 + y * 9) % 6 === 0) col = mix(col, [34, 58, 32], 0.75)
+
+      c.set(x, y, [...col, 255])
+    }
+  }
+  await c.save('public/textures/brick.png')
+}
+
 // ═══════════════════════ МЕШКОВИНА ═══════════════════════
 
 async function linen(size = 64) {
@@ -554,6 +652,8 @@ ${names.map((n) => `  .sprite-${n} { background-image: url('/sprites/${n}.png');
 console.log('Мастерская художника открыта.')
 await parchment()
 await wood()
+await oak()
+await brick()
 await linen()
 await ribbon()
 await coin()

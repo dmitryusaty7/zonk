@@ -42,8 +42,9 @@ function applyInsets() {
   const bottom = (safeArea.bottom || 0) + (content.bottom || 0)
   root.style.setProperty('--tg-top', `${top}px`)
   root.style.setProperty('--tg-bottom', `${bottom}px`)
+  // Рабочая высота: внутри Telegram верить надо клиенту, а не 100dvh
   if (tg.viewportStableHeight) {
-    root.style.setProperty('--tg-height', `${tg.viewportStableHeight}px`)
+    root.style.setProperty('--app-h', `${Math.round(tg.viewportStableHeight)}px`)
   }
 }
 

@@ -39,7 +39,7 @@ export default function VictoryScreen() {
   })
 
   return (
-    <div className="chest-burst pad-tg-top relative flex h-dvh flex-col">
+    <div className="screen chest-burst pad-tg-top relative">
       {/* Монеты сыплются с потолка — по разу при появлении экрана */}
       <div className="coin-rain pointer-events-none fixed inset-0 z-20 overflow-hidden" aria-hidden="true">
         {coins.map((c, i) => (
@@ -74,7 +74,7 @@ export default function VictoryScreen() {
         <Ribbon className="mt-2">ОСТАЛЬНЫЕ ПЛАТЯТ ЗА РОМ</Ribbon>
       </header>
 
-      <main className="surf-board frame mx-2 mt-1 flex-1 overflow-y-auto px-2 py-2">
+      <main className="surf-board frame mx-2 mt-1 min-h-0 flex-1 overflow-y-auto px-2 py-2">
         <ol className="space-y-1">
           {table.map((p, i) => {
             const isWinner = won.has(p.id)

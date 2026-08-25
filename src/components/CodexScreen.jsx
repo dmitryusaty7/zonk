@@ -30,7 +30,7 @@ function Crew() {
       {roster.map((r, i) => {
         const race = raceById(r.race)
         return (
-          <div key={i} className="frame-thin surf-wood px-2 py-2">
+          <div key={i} className="frame-thin surf-oak px-2 py-2">
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -100,7 +100,7 @@ export default function CodexScreen() {
   const errs = validateSettings(settings)
 
   return (
-    <div className="pad-tg-top flex h-dvh flex-col">
+    <div className="screen pad-tg-top">
       <header className="surf-orc frame-gold mx-2 px-3 py-3 text-center">
         <h1 className="goth text-[32px] leading-none text-gold">{TERMS.codex.toUpperCase()}</h1>
       </header>
@@ -124,7 +124,7 @@ export default function CodexScreen() {
         ))}
       </nav>
 
-      <main className="surf-board frame mx-2 mt-1 flex-1 overflow-y-auto px-3 py-3">
+      <main className="surf-board frame mx-2 mt-1 min-h-0 flex-1 overflow-y-auto px-3 py-3">
         {tab === 'crew' ? <Crew /> : <SettingsPanel />}
       </main>
 

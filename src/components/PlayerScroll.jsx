@@ -140,7 +140,7 @@ export default function PlayerScroll({ player, entries, active, boltsMax, seed =
       <button
         type="button"
         onClick={onTapHead}
-        className="surf-wood flex shrink-0 flex-col items-center gap-0.5 px-1 pb-1 pt-1.5 text-center"
+        className="surf-oak flex shrink-0 flex-col items-center gap-0.5 px-1 pb-1 pt-1.5 text-center"
       >
         <div className="flex items-center gap-1">
           <RaceIcon race={player.race} size={24} />

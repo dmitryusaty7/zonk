@@ -107,9 +107,9 @@ export default function GameScreen() {
   }, [turnIndex, players.length])
 
   return (
-    <div className="pad-tg-top flex h-dvh flex-col gap-1">
+    <div className="screen pad-tg-top gap-1">
       {/* ── Верхняя балка ── */}
-      <header className="surf-orc frame mx-2 flex shrink-0 items-center gap-1 px-1.5 py-1.5">
+      <header className="surf-oak frame mx-2 flex shrink-0 items-center gap-1 px-1.5 py-1.5">
         <button
           type="button"
           className="btn h-12 w-12 text-[20px] leading-none"

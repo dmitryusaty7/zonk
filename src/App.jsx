@@ -12,6 +12,7 @@ import RulesScreen from './components/RulesScreen.jsx'
 import GameScreen from './components/GameScreen.jsx'
 import VictoryScreen from './components/VictoryScreen.jsx'
 import Toast from './components/Toast.jsx'
+import { HangingLantern, FlyBy } from './components/Scene.jsx'
 
 /** Цвета хрома Telegram — под тёмный трюм. */
 const CHROME = { header: '#12302f', background: '#070d10' }
@@ -67,6 +68,9 @@ export default function App() {
       {screen === 'rules' && <RulesScreen />}
       {screen === 'game' && <GameScreen />}
       {screen === 'victory' && <VictoryScreen />}
+      {/* За столом фонарь только мешал бы кнопкам в балке */}
+      {screen !== 'game' && <HangingLantern />}
+      <FlyBy />
       <Toast />
     </>
   )

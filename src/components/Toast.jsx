@@ -61,8 +61,9 @@ export default function Toast() {
     <div
       // Садится вплотную над пультом: не закрывает ни счёт, ни кнопки.
       className="pointer-events-none fixed inset-x-3 z-40 flex justify-center"
-      // На экранах без пульта (--pad-h = 0) держимся выше кнопок
-      style={{ bottom: 'max(calc(var(--pad-h, 0px) + 10px), 96px)' }}
+      // Заметно выше пульта: реплику читают между бросками, и она не должна
+      // липнуть к кнопкам. На экранах без пульта держимся ещё выше.
+      style={{ bottom: 'max(calc(var(--pad-h, 0px) + 34px), 150px)' }}
       role="status"
       aria-live="polite"
     >

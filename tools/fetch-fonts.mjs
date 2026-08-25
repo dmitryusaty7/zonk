@@ -32,6 +32,15 @@ const FAMILIES = [
 ]
 const KEEP = new Set(['cyrillic', 'cyrillic-ext', 'latin', 'latin-ext'])
 
+/**
+ * Эти подмножества вшиваются прямо в CSS как base64.
+ * Причина: в вебвью Telegram шрифт иногда не успевал загрузиться, и текст
+ * оставался тощим запасным моноширинным. Вшитый шрифт не может не приехать —
+ * он часть стилей и рисуется с первого кадра. Остальные подмножества
+ * (латиница, расширения) остаются файлами: они нужны редко.
+ */
+const INLINE = new Set(['handjet-cyrillic', 'tiny5-cyrillic'])
+
 async function fetchCss(query) {
   const url = `https://fonts.googleapis.com/css2?family=${query}&display=swap`
   const res = await fetch(url, { headers: { 'User-Agent': UA } })
@@ -70,6 +79,8 @@ async function main() {
       const buf = Buffer.from(await res.arrayBuffer())
       await writeFile(resolve(FONT_DIR, file), buf)
 
+      const key = `${slug}-${subset}`
+      const inline = INLINE.has(key)
       faces.push({
         family: field(block, 'font-family'),
         style: field(block, 'font-style') || 'normal',
@@ -78,14 +89,20 @@ async function main() {
         file,
         subset,
         size: buf.length,
+        src: inline
+          ? `url('data:font/woff2;base64,${buf.toString('base64')}') format('woff2')`
+          : `url('/fonts/${file}') format('woff2')`,
       })
-      console.log(`  ✓ ${file} (${(buf.length / 1024).toFixed(1)} КБ)`)
+      console.log(`  ✓ ${file} (${(buf.length / 1024).toFixed(1)} КБ)${inline ? ' — вшит в CSS' : ''}`)
     }
   }
 
   const header = `/* ПИСЦОВЫЕ ПЕРЬЯ — локальные шрифты летописи.
  * Сгенерировано tools/fetch-fonts.mjs. Руками не править:
  * перезапусти  node tools/fetch-fonts.mjs
+ *
+ * Кириллица Handjet и Tiny5 вшита в этот файл целиком — иначе в вебвью
+ * Telegram текст успевал показаться тощим запасным шрифтом.
  *
  * Handjet      — готический пиксель, заголовки и цифры счёта
  * Pixelify Sans — основной текст свитков
@@ -98,8 +115,8 @@ async function main() {
   font-family: ${f.family};
   font-style: ${f.style};
   font-weight: ${f.weight};
-  font-display: swap;
-  src: url('/fonts/${f.file}') format('woff2');
+  font-display: ${f.src.startsWith("url('data:") ? 'block' : 'swap'};
+  src: ${f.src};
   unicode-range: ${f.range};
 }`,
     )

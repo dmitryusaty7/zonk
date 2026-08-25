@@ -157,7 +157,7 @@ export function Modal({ title, onClose, children, footer }) {
           ✕
         </button>
       </div>
-      <div className="surf-board frame mx-2 mt-1 flex-1 overflow-y-auto px-3 py-3">{children}</div>
+      <div className="surf-board frame mx-2 mt-1 min-h-0 flex-1 overflow-y-auto px-3 py-3">{children}</div>
       {footer && <div className="mx-2 mb-2 mt-1">{footer}</div>}
       <div className="pad-tg-bottom" />
     </div>
@@ -171,11 +171,11 @@ export function Modal({ title, onClose, children, footer }) {
  * инлайновом стиле: только так сборщик перепишет адрес, когда игра живёт
  * в подпапке (GitHub Pages).
  */
-export function Sprite({ name, size = 24, className = '' }) {
+export function Sprite({ name, size = 24, className = '', style }) {
   return (
     <span
       className={`sprite sprite-${name} ${className}`}
-      style={{ width: size, height: size }}
+      style={{ width: size, height: size, ...style }}
       aria-hidden="true"
     />
   )

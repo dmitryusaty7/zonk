@@ -81,34 +81,44 @@ export default function MenuScreen() {
   const gloryCount = useGameStore((s) => Object.keys(s.glory).length)
 
   return (
-    <div className="pad-tg-top flex h-dvh flex-col">
+    <div className="screen pad-tg-top">
       {/* ── Вывеска ── */}
       <header className="surf-orc frame-gold nailed relative mx-2 px-3 pb-4 pt-6 text-center">
         <h1 className="goth text-[68px] leading-[0.8] text-gold">{TAVERN.game}</h1>
         <p className="mt-1 text-[17px] leading-tight text-orc-bright">{TAVERN.subtitle}</p>
         <Ribbon className="mt-3">{TAVERN.place}</Ribbon>
 
-        {/* Очаг, фонарь на крюке и всё, что стоит на полке у стойки */}
-        <div className="mt-3 flex items-end justify-center gap-2">
-          <Sprite name="bottle" size={26} />
-          <Sprite name="mug" size={26} />
+        {/* Рыба-трофей на стене — гордость заведения */}
+        <div className="mt-3 flex items-center justify-center gap-4">
+          <span className="trophy" role="img" aria-label="Рыба-трофей">
+            <Sprite name="fish" size={44} />
+          </span>
           <span className="hearth h-[56px] w-[56px]" role="img" aria-label="Очаг" />
-          <Sprite name="lantern" size={30} className="lantern-hook" />
-          <Sprite name="parrot" size={26} />
         </div>
-        <p className="mt-1.5 text-[14px] leading-tight text-parch-dark">
+
+        {/* Стойка бармена: зелёные бутыли с пойлом и кружка */}
+        <div className="mt-3 flex items-end justify-center gap-1.5 px-2">
+          <Sprite name="bottle" size={24} />
+          <Sprite name="bottle" size={28} />
+          <Sprite name="mug" size={26} />
+          <Sprite name="bottle" size={26} />
+          <Sprite name="parrot" size={24} />
+          <Sprite name="bottle" size={24} />
+        </div>
+        <div className="counter mx-1 mt-[-2px] h-[10px]" aria-hidden="true" />
+        <p className="mt-2 text-[14px] leading-tight text-parch-dark">
           кости · золото · ром · драка
         </p>
       </header>
 
       {/* ── Команда одной строкой ── */}
-      <div className="surf-board frame mx-2 mt-1 flex-1 overflow-y-auto px-3 py-3">
+      <div className="surf-board frame mx-2 mt-1 min-h-0 flex-1 overflow-y-auto px-3 py-3">
         <p className="tiny mb-2 text-[12px] leading-none text-orc-bright">ЗА СТОЛОМ</p>
         <div className="mb-4 flex flex-wrap gap-1.5">
           {roster.map((r, i) => (
             <span
               key={i}
-              className="frame-thin surf-wood flex items-center gap-1.5 px-2 py-1.5"
+              className="frame-thin surf-oak flex items-center gap-1.5 px-2 py-1.5"
             >
               <RaceIcon race={r.race} size={22} />
               <span className="text-[16px] leading-none text-parch">{r.name}</span>
