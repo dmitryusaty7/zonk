@@ -10,7 +10,7 @@
     "preview": "vite preview --host --port 4173",
     "assets": "node tools/gen-assets.mjs",
     "fonts": "node tools/fetch-fonts.mjs",
-    "test": "node --test src/engine/",
+    "test": "node --test src/engine/rulesEngine.test.mjs",
     "shots": "node tools/shots.mjs",
     "check-build": "node tools/check-build.mjs",
     "single": "npm run build && node tools/build-single.mjs",
