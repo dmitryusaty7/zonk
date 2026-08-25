@@ -75,6 +75,17 @@ export function initTelegram(colors) {
   }
   if (atLeast('7.10')) safe(() => tg.setBottomBarColor(colors.background), 'setBottomBarColor')
 
+  // Во весь экран, край в край. Клиент сам сообщит настоящие отступы
+  // (статус-бар, чёлка, своя плавающая кнопка) — вёрстка их учитывает.
+  if (atLeast('8.0')) {
+    safe(() => tg.requestFullscreen(), 'requestFullscreen')
+    safe(() => tg.onEvent('fullscreenChanged', applyInsets), 'fullscreenChanged')
+    safe(
+      () => tg.onEvent('fullscreenFailed', () => tg.expand?.()),
+      'fullscreenFailed',
+    )
+  }
+
   applyInsets()
   safe(() => tg.onEvent('viewportChanged', applyInsets), 'viewportChanged')
   if (atLeast('8.0')) {
@@ -123,6 +134,14 @@ export function backButton(visible, handler) {
     safe(() => b.offClick(handler), 'BackButton.offClick')
     safe(() => b.hide(), 'BackButton.hide')
   }
+}
+
+/** Развернуть/свернуть полноэкранный режим вручную. */
+export function toggleFullscreen() {
+  if (!insideTelegram || !atLeast('8.0')) return false
+  if (tg.isFullscreen) safe(() => tg.exitFullscreen(), 'exitFullscreen')
+  else safe(() => tg.requestFullscreen(), 'requestFullscreen')
+  return true
 }
 
 /** Закрыть мини-приложение (кнопка «Сойти на берег»). */

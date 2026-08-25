@@ -9,7 +9,7 @@
  */
 import { useMemo } from 'react'
 import { useGameStore } from '../store/gameStore.js'
-import { tap, Emblem, Ribbon, Coin } from './ui.jsx'
+import { tap, RaceIcon, Ribbon, Coin } from './ui.jsx'
 import { raceById } from '../data/races.js'
 import { plural } from '../data/lore.js'
 
@@ -59,7 +59,7 @@ export default function VictoryScreen() {
 
         {first && (
           <div className="mt-2 flex items-center justify-center gap-2">
-            <Emblem mark={first.emblem} size={34} />
+            <RaceIcon race={first.race} size={36} />
             <span className="goth text-[34px] leading-none text-bone">{first.name}</span>
           </div>
         )}
@@ -87,7 +87,7 @@ export default function VictoryScreen() {
                 }`}
               >
                 <span className="num w-6 text-[23px] leading-none text-ink/55">{i + 1}</span>
-                <Emblem mark={p.emblem} size={26} />
+                <RaceIcon race={p.race} size={28} />
                 <div className="min-w-0 flex-1">
                   <span className="goth block truncate text-[22px] leading-none text-ink">
                     {p.name}

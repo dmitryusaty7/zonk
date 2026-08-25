@@ -4,10 +4,10 @@
  * и цвет метки; имя игрок вписывает сам.
  */
 export const RACES = [
-  { id: 'orc', label: 'Орк-рубака', short: 'ОРК', mark: '🪓', tint: '#7fae44' },
-  { id: 'murloc', label: 'Мурлок-рыбак', short: 'МУРЛОК', mark: '🐟', tint: '#3fc8c0' },
-  { id: 'goblin', label: 'Хитрый Гоблин', short: 'ГОБЛИН', mark: '👺', tint: '#e0a13a' },
-  { id: 'troll', label: 'Тролль-корсар', short: 'ТРОЛЛЬ', mark: '🏴‍☠️', tint: '#a878d8' },
+  { id: 'orc', label: 'Орк-рубака', short: 'ОРК', sprite: 'orc', tint: '#78af46' },
+  { id: 'murloc', label: 'Мурлок-рыбак', short: 'МУРЛОК', sprite: 'murloc', tint: '#5ac8cd' },
+  { id: 'goblin', label: 'Хитрый Гоблин', short: 'ГОБЛИН', sprite: 'goblin', tint: '#d6b042' },
+  { id: 'troll', label: 'Тролль-корсар', short: 'ТРОЛЛЬ', sprite: 'troll', tint: '#a078d2' },
 ]
 
 export const raceById = (id) => RACES.find((r) => r.id === id) || RACES[0]

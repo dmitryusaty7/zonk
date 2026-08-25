@@ -8,7 +8,7 @@ import { useGameStore } from '../store/gameStore.js'
 import { TAVERN, TERMS } from '../data/lore.js'
 import { raceById } from '../data/races.js'
 import { gloryTable } from '../tma/storage.js'
-import { tap, Emblem, Coin, Ribbon, Modal } from './ui.jsx'
+import { tap, RaceIcon, Sprite, Coin, Ribbon, Modal } from './ui.jsx'
 
 /* ─────────────────────── СЛАВА БУХТЫ ─────────────────────── */
 
@@ -51,7 +51,7 @@ function GloryModal({ onClose }) {
               }`}
             >
               <span className="num w-6 text-[22px] leading-none text-ink/55">{i + 1}</span>
-              <Emblem mark={raceById(r.race).mark} size={24} />
+              <RaceIcon race={r.race} size={26} />
               <div className="min-w-0 flex-1">
                 <span className="goth block truncate text-[21px] leading-none text-ink">{r.name}</span>
                 <span className="tiny block text-[11px] leading-tight text-ink/60">
@@ -87,7 +87,14 @@ export default function MenuScreen() {
         <h1 className="goth text-[68px] leading-[0.8] text-gold">{TAVERN.game}</h1>
         <p className="mt-1 text-[17px] leading-tight text-orc-bright">{TAVERN.subtitle}</p>
         <Ribbon className="mt-3">{TAVERN.place}</Ribbon>
-        <p className="mt-2 text-[14px] leading-tight text-parch-dark">
+
+        {/* Очаг: единственный источник тепла в трюме */}
+        <div className="mt-3 flex items-end justify-center gap-3">
+          <Sprite name="mug" size={26} />
+          <span className="hearth h-[52px] w-[52px]" role="img" aria-label="Очаг" />
+          <Sprite name="fish" size={26} />
+        </div>
+        <p className="mt-1.5 text-[14px] leading-tight text-parch-dark">
           кости · золото · ром · драка
         </p>
       </header>
@@ -101,7 +108,7 @@ export default function MenuScreen() {
               key={i}
               className="frame-thin surf-wood flex items-center gap-1.5 px-2 py-1.5"
             >
-              <Emblem mark={raceById(r.race).mark} size={20} />
+              <RaceIcon race={r.race} size={22} />
               <span className="text-[16px] leading-none text-parch">{r.name}</span>
             </span>
           ))}

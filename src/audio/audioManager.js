@@ -12,14 +12,16 @@
  *      public/sounds/voice/<пак>/ — они начинают звучать. Нет файла — тишина,
  *      без единой ошибки в консоли.
  */
+import { sfxr } from 'jsfxr'
 import { SYNTHS } from './synth.js'
+import { SFX } from './sfx.js'
 import { VOICE_PACKS } from '../data/lore.js'
 import { on } from './bus.js'
 
 /** Событие движка → звуковой слот, голосовой слот, сила тряски экрана. */
 export const EVENT_MAP = {
   gameStart: { sound: 'mug', voice: 'gameStart' },
-  score: { sound: 'quill', voice: 'score' },
+  score: { sound: 'coin', voice: 'score' },
   bigScore: { sound: 'mug', voice: 'bigScore', shake: 1 },
   bolt: { sound: 'bolt', voice: 'bolt' },
   boltPenalty: { sound: 'sword', voice: 'boltPenalty', shake: 2 },
@@ -49,6 +51,7 @@ class AudioManager {
     this.volume = 0.7
     this.voicePack = 'pirate'
     this.samples = new Map() // slot -> AudioBuffer | null (null = файла нет)
+    this.chips = new Map() // slot -> AudioBuffer из sfxr
     this.voices = new Map() // url -> AudioBuffer | null
     this.lastVoiceAt = 0
     this.unsub = null
@@ -63,6 +66,7 @@ class AudioManager {
       this.master = this.ctx.createGain()
       this.master.gain.value = this.muted ? 0 : this.volume
       this.master.connect(this.ctx.destination)
+      this.buildChips()
       this.preloadSamples()
     }
     if (this.ctx.state === 'suspended') this.ctx.resume()
@@ -114,6 +118,21 @@ class AudioManager {
     }
   }
 
+  /**
+   * Развернуть чип-звуки sfxr в буферы. Делается один раз при пробуждении:
+   * синтез короткий, но повторять его на каждый клик незачем.
+   */
+  buildChips() {
+    Object.entries(SFX).forEach(([slot, b58]) => {
+      try {
+        const node = sfxr.toWebAudio(sfxr.b58decode(b58), this.ctx)
+        if (node?.buffer) this.chips.set(slot, node.buffer)
+      } catch (err) {
+        console.warn(`[audio] чип «${slot}» не собрался:`, err?.message)
+      }
+    })
+  }
+
   /** Подменить процедурные звуки файлами, если их положили в public/sounds. */
   async preloadSamples() {
     if (!this.canLoadFiles) return
@@ -135,13 +154,24 @@ class AudioManager {
     return src
   }
 
-  /** Сыграть слот: файл, если есть, иначе процедурный звук. */
+  /**
+   * Сыграть слот. Порядок старшинства:
+   *   1. свой файл из public/sounds — хозяин игры сказал последнее слово;
+   *   2. чип sfxr — аркадный звук для монет, ударов и взрывов;
+   *   3. процедурный синтез — фактурные звуки, которых у sfxr нет.
+   */
   play(slot, { gain = 1 } = {}) {
     if (!this.ctx || this.muted) return
     if (this.ctx.state === 'suspended') this.ctx.resume()
+
     const sample = this.samples.get(slot)
     if (sample) {
       this.playBuffer(sample, gain)
+      return
+    }
+    const chip = this.chips.get(slot)
+    if (chip) {
+      this.playBuffer(chip, gain)
       return
     }
     const synth = SYNTHS[slot]

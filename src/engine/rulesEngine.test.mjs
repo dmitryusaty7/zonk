@@ -391,13 +391,23 @@ test('кость за борт на бочке жжёт глоток, а не з
   assert.equal(g.players[0].bolts, 0)
 })
 
-test('счёт не уходит в минус, если так велено настройками', () => {
-  let g = game(2, { allowNegative: false })
+test('по обычаю Бухты счёт упирается в ноль', () => {
+  let g = game()
+  // настройки по умолчанию: в долг не пишем
+  assert.equal(g.settings.allowNegative, false)
+  g = apply(g, { type: 'foul', foul: 'mud', playerId: g.players[0].id })
+  g = apply(g, { type: 'foul', foul: 'mud', playerId: g.players[0].id })
+  g = apply(g, { type: 'foul', foul: 'mud', playerId: g.players[0].id })
+  assert.equal(g.players[0].score, 0, 'рваная сеть не загнала в минус')
+})
+
+test('минус можно разрешить настройкой', () => {
+  let g = game(2, { allowNegative: true })
   // три крючка подряд рвут сеть на -100, но ниже нуля не пускают
   g = apply(g, { type: 'foul', foul: 'mud', playerId: g.players[0].id })
   g = apply(g, { type: 'foul', foul: 'mud', playerId: g.players[0].id })
   g = apply(g, { type: 'foul', foul: 'mud', playerId: g.players[0].id })
-  assert.equal(g.players[0].score, 0)
+  assert.equal(g.players[0].score, -100, 'с разрешённым минусом долг пишется')
 })
 
 // ─────────────────────── ПОРЯДОК ХОДОВ ───────────────────────

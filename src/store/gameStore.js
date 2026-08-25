@@ -369,7 +369,19 @@ export const useGameStore = create()(
     }),
     {
       name: 'zonk-bay',
-      version: 3,
+      version: 4,
+      /**
+       * Пока переключателя «ниже нуля» не было в Кодексе, у всех лежало
+       * старое значение true, выбрать которое было негде. Поднимая версию,
+       * приводим сохранённое к новому обычаю — минус выключен.
+       */
+      migrate: (state, from) => {
+        if (!state) return state
+        if (from < 4 && state.settings) {
+          return { ...state, settings: { ...state.settings, allowNegative: false } }
+        }
+        return state
+      },
       storage: createJSONStorage(() => localStorage),
       partialize: (s) => ({
         // «Кодекс» — не место для возврата: после перезапуска встаём в меню

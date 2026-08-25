@@ -4,7 +4,7 @@
  * Пустой бросок рисуется ржавым крючком, три крючка — рваной сетью.
  */
 import { useEffect, useRef } from 'react'
-import { Emblem } from './ui.jsx'
+import { RaceIcon } from './ui.jsx'
 import { plural, SIPS } from '../data/lore.js'
 
 /* ─────────────────────────── СТРОКИ ─────────────────────────── */
@@ -143,7 +143,7 @@ export default function PlayerScroll({ player, entries, active, boltsMax, seed =
         className="surf-wood flex shrink-0 flex-col items-center gap-0.5 px-1 pb-1 pt-1.5 text-center"
       >
         <div className="flex items-center gap-1">
-          <Emblem mark={player.emblem} size={22} />
+          <RaceIcon race={player.race} size={24} />
           <span
             className={`goth truncate text-[21px] leading-none ${active ? 'text-orc-bright torch' : 'text-parch'}`}
           >

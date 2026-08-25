@@ -481,6 +481,316 @@ async function icons() {
   await fav.save('public/favicon.png')
 }
 
+// ═══════════════════════ СПРАЙТЫ ТАВЕРНЫ ═══════════════════════
+
+/**
+ * Всё живое и вещественное в игре нарисовано здесь пиксель в пиксель:
+ * эмодзи в тёмном трюме смотрелись чужеродно — цветные, гладкие и
+ * разного стиля на каждой платформе.
+ *
+ * Палитра общая, чтобы рожи и утварь смотрелись роднёй:
+ *   k — обводка      o/O — орочья зелень   c/C — мурлочья бирюза
+ *   y/Y — гоблинская охра                  p/P — тролличий пурпур
+ *   b — кость        r/R — красное сукно    g/G — золото
+ *   w/W — дерево     s/S — сталь            f/F/e — огонь
+ *   d — тень         . — прозрачно
+ */
+const SPRITE_PALETTE = {
+  '.': null,
+  k: [9, 15, 18],
+  d: [26, 38, 44],
+  o: [61, 110, 48], O: [120, 175, 70],
+  c: [40, 130, 140], C: [90, 200, 205],
+  y: [150, 120, 40], Y: [214, 176, 66],
+  p: [104, 72, 150], P: [160, 120, 210],
+  b: [222, 208, 171], B: [255, 250, 235],
+  r: [160, 40, 32], R: [214, 70, 56],
+  g: [200, 155, 45], G: [255, 225, 130],
+  w: [92, 61, 30], W: [140, 100, 55],
+  s: [106, 122, 130], S: [176, 190, 198],
+  f: [200, 70, 20], F: [255, 150, 40], e: [255, 235, 150],
+}
+
+/** 16×16, читается сверху вниз. Точка — прозрачно. */
+const SPRITES = {
+  // ── Орк-рубака: тяжёлая бровь, квадратная челюсть, два клыка ──
+  orc: [
+    '................',
+    '................',
+    '...kkkkkkkkkk...',
+    '..kOOOOOOOOOOk..',
+    '..kOOOOOOOOOOk..',
+    '..kkkkOOOOkkkk..',
+    '..kOkkOOOOkkOk..',
+    '..kOkkOOOOkkOk..',
+    '..kOOOOOOOOOOk..',
+    '..kOOkkkkkkOOk..',
+    '..kObkOOOOkbOk..',
+    '..kObkkkkkkbOk..',
+    '..kOOOOOOOOOOk..',
+    '...kkkkkkkkkk...',
+    '................',
+    '................',
+  ],
+  // ── Мурлок-рыбак: гребень, боковые плавники, выпученные глаза ──
+  murloc: [
+    '................',
+    '.......kk.......',
+    '......kCCk......',
+    '..kk..kCCk..kk..',
+    '.kCCkkkCCkkkCCk.',
+    '.kCCCCCCCCCCCCk.',
+    '.kCBBkCCCCkBBCk.',
+    '.kCBkkCCCCkkBCk.',
+    '.kCCCCCCCCCCCCk.',
+    '..kCCbbbbbbCCk..',
+    '..kCbkbkbkbCCk..',
+    '...kCCCCCCCCk...',
+    '....kkCCCCkk....',
+    '......kkkk......',
+    '................',
+    '................',
+  ],
+  // ── Хитрый Гоблин: уши торчат вбок, длинный нос, мелкие зубы ──
+  goblin: [
+    '................',
+    '................',
+    '....kkkkkkkk....',
+    '...kYYYYYYYYk...',
+    '.kkkYYYYYYYYkkk.',
+    '.kYYkkYYYYkkYYk.',
+    '.kYYkkYYYYkkYYk.',
+    '.kkkYYYYYYYYkkk.',
+    '....kYYYyyYYk...',
+    '.....kYYyyYYk...',
+    '.....kYYyyYYk...',
+    '.....kYbbbbYk...',
+    '......kYYYYk....',
+    '.......kkkk.....',
+    '................',
+    '................',
+  ],
+  // ── Тролль-корсар: красный платок, серьга, нижние клыки ──
+  troll: [
+    '................',
+    '..kkkkkkkkkkkk..',
+    '..krrrrrrrrrrk..',
+    '..kRRrrrrrrRRk..',
+    '..kkkkkkkkkkkk..',
+    '..kPPPPPPPPPPk..',
+    '..kPkkPPPPkkPk..',
+    '..kPkkPPPPkkPk..',
+    '.gkPPPPPPPPPPk..',
+    '.gkPPPbbbbPPPk..',
+    '.gkPPbkkkkbPPk..',
+    '..kPPbPPPPbPPk..',
+    '..kPPPPPPPPPPk..',
+    '...kkkkkkkkkk...',
+    '................',
+    '................',
+  ],
+  // ── Кружка рома с пеной ──
+  mug: [
+    '................',
+    '................',
+    '..kkkkkkkk......',
+    '..kBBBBBBk......',
+    '..kBBBBBBkkkk...',
+    '..kwWWWWwkWWk...',
+    '..kwWWWWwkkWk...',
+    '..kwWWWWwk.Wk...',
+    '..kwWWWWwk.Wk...',
+    '..kwWWWWwkkWk...',
+    '..kwWWWWwkWWk...',
+    '..kwwwwwwkkkk...',
+    '..kkkkkkkk......',
+    '................',
+    '................',
+    '................',
+  ],
+  // ── Рыба ──
+  fish: [
+    '................',
+    '................',
+    '................',
+    '.........kk.....',
+    '...kkkk.kCk.....',
+    '..kCCCCkkCCk....',
+    '.kCkCCCCCCCCk...',
+    '.kCCCCCCCCCCk...',
+    '.kCkCCCCCCCCk...',
+    '..kCCCCkkCCk....',
+    '...kkkk.kCk.....',
+    '.........kk.....',
+    '................',
+    '................',
+    '................',
+    '................',
+  ],
+  // ── Кость (игральная) ──
+  die: [
+    '................',
+    '..kkkkkkkkkkk...',
+    '..kBBBBBBBBBk...',
+    '..kBkkBBBkkBk...',
+    '..kBkkBBBkkBk...',
+    '..kBBBBBBBBBk...',
+    '..kBBBkkkBBBk...',
+    '..kBBBkkkBBBk...',
+    '..kBBBBBBBBBk...',
+    '..kBkkBBBkkBk...',
+    '..kBkkBBBkkBk...',
+    '..kBBBBBBBBBk...',
+    '..kkkkkkkkkkk...',
+    '................',
+    '................',
+    '................',
+  ],
+  // ── Череп ──
+  skull: [
+    '................',
+    '....kkkkkk......',
+    '...kBBBBBBk.....',
+    '..kBBBBBBBBk....',
+    '..kBkkBBkkBk....',
+    '..kBkkBBkkBk....',
+    '..kBBBBBBBBk....',
+    '..kBBBkkBBBk....',
+    '...kBBBBBBk.....',
+    '...kBkbkbkBk....',
+    '...kkkkkkkk.....',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+  ],
+  // ── Звук включён ──
+  sound: [
+    '................',
+    '................',
+    '......kk........',
+    '.....kSk..k.....',
+    '....kSSk.kSk....',
+    '..kkSSSk.kSk.k..',
+    '..kSSSSk..kSkSk.',
+    '..kSSSSk..kSkSk.',
+    '..kkSSSk.kSk.k..',
+    '....kSSk.kSk....',
+    '.....kSk..k.....',
+    '......kk........',
+    '................',
+    '................',
+    '................',
+    '................',
+  ],
+  // ── Звук выключен ──
+  mute: [
+    '................',
+    '................',
+    '......kk........',
+    '.....kSk........',
+    '....kSSk.k...k..',
+    '..kkSSSk..k.k...',
+    '..kSSSSk...k....',
+    '..kSSSSk..k.k...',
+    '..kkSSSk.k...k..',
+    '....kSSk........',
+    '.....kSk........',
+    '......kk........',
+    '................',
+    '................',
+    '................',
+    '................',
+  ],
+}
+
+/** Кадры очага: пламя дышит, поэтому их три. */
+const FIRE_FRAMES = [
+  [
+    '................',
+    '................',
+    '.......e........',
+    '......eFe.......',
+    '.....eFFFe......',
+    '.....FFFFF......',
+    '....fFFFFFf.....',
+    '....fFFeFFf.....',
+    '...ffFFeFFff....',
+    '...ffFFFFFff....',
+    '..fffFFFFFfff...',
+    '..ffffFFFffff...',
+    '..wwwwwwwwwww...',
+    '..kwWwwWwwWwk...',
+    '..kkkkkkkkkkk...',
+    '................',
+  ],
+  [
+    '................',
+    '................',
+    '........e.......',
+    '.......eFe......',
+    '......eFFF......',
+    '.....eFFFFe.....',
+    '....fFFFFFf.....',
+    '....fFFeFFf.....',
+    '...ffFeeFFf.....',
+    '...ffFFFFFff....',
+    '..fffFFFFFff....',
+    '..ffffFFFffff...',
+    '..wwwwwwwwwww...',
+    '..kwWwwWwwWwk...',
+    '..kkkkkkkkkkk...',
+    '................',
+  ],
+  [
+    '................',
+    '................',
+    '......e.........',
+    '.....eFe........',
+    '.....FFFe.......',
+    '....eFFFFe......',
+    '....fFFFFf......',
+    '...ffFeFFf......',
+    '...ffFeeFFf.....',
+    '..fffFFFFFf.....',
+    '..fffFFFFFff....',
+    '..ffffFFFffff...',
+    '..wwwwwwwwwww...',
+    '..kwWwwWwwWwk...',
+    '..kkkkkkkkkkk...',
+    '................',
+  ],
+]
+
+/** Нарисовать спрайт по строковой карте. */
+function drawSprite(c, rows, ox = 0, oy = 0, name = '?') {
+  // Кривая строка раньше молча съезжала и портила рожу — теперь падаем сразу
+  rows.forEach((row, y) => {
+    if (row.length !== 16) {
+      throw new Error(`Спрайт «${name}»: строка ${y} длиной ${row.length}, нужно 16`)
+    }
+  })
+  rows.forEach((row, y) => {
+    for (let x = 0; x < row.length; x++) {
+      const col = SPRITE_PALETTE[row[x]]
+      if (col) c.set(x + ox, y + oy, [...col, 255])
+    }
+  })
+}
+
+async function sprites() {
+  for (const [name, rows] of Object.entries(SPRITES)) {
+    const c = new Canvas(16, 16)
+    drawSprite(c, rows, 0, 0, name)
+    await c.save(`public/sprites/${name}.png`)
+  }
+  // Очаг одной лентой: три кадра подряд, анимация крутит фон
+  const fire = new Canvas(48, 16)
+  FIRE_FRAMES.forEach((rows, i) => drawSprite(fire, rows, i * 16, 0, `fire${i}`))
+  await fire.save('public/sprites/fire.png')
+}
+
 // ═══════════════════════ ЗАПУСК ═══════════════════════
 
 console.log('Мастерская художника открыта.')
@@ -490,5 +800,6 @@ await linen()
 await ribbon()
 await coin()
 await hook()
+await sprites()
 await icons()
 console.log('Ассеты готовы.')

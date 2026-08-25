@@ -12,7 +12,7 @@ import { useEffect, useRef } from 'react'
 import { useGameStore, selectCurrent } from '../store/gameStore.js'
 import { barrelNeed } from '../engine/rulesEngine.js'
 import { TERMS, plural, SIPS } from '../data/lore.js'
-import { tap, Emblem, Coin } from './ui.jsx'
+import { tap, RaceIcon, Coin } from './ui.jsx'
 
 /** Ходовые номиналы. Крупные суммы набираются повтором. */
 const QUICK = [5, 10, 25, 50, 100]
@@ -68,7 +68,7 @@ export default function InputPad() {
     >
       {/* ── Чей ход и что от него требуется ── */}
       <div className="mb-2 flex items-center gap-2">
-        <Emblem mark={player.emblem} size={24} />
+        <RaceIcon race={player.race} size={26} />
         <span className="goth text-[24px] leading-none text-orc-bright">{player.name}</span>
         <span className="flex-1" />
         {onBarrel ? (

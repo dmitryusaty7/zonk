@@ -9,7 +9,7 @@ import { describeEntry } from '../engine/rulesEngine.js'
 import PlayerScroll from './PlayerScroll.jsx'
 import InputPad from './InputPad.jsx'
 import SettingsPanel from './SettingsPanel.jsx'
-import { Modal, tap, Emblem, Stepper, Coin } from './ui.jsx'
+import { Modal, tap, RaceIcon, Sprite, Stepper, Coin } from './ui.jsx'
 import { TERMS, plural, TURNS } from '../data/lore.js'
 
 /* ─────────────────────── ЛЕТОПИСЬ СОБЫТИЙ ─────────────────────── */
@@ -52,7 +52,7 @@ function ScribeModal({ player, onClose }) {
   return (
     <Modal title="Правка писаря" onClose={onClose}>
       <div className="frame-thin surf-parch mb-3 flex items-center gap-2 px-3 py-2">
-        <Emblem mark={player.emblem} size={30} />
+        <RaceIcon race={player.race} size={32} />
         <span className="goth flex-1 text-[24px] leading-none text-ink">{player.name}</span>
         <span className="num text-[32px] leading-none text-ink">{player.score}</span>
         <Coin size={20} />
@@ -169,7 +169,7 @@ export default function GameScreen() {
           }}
           aria-label={muted ? 'Включить звук' : 'Заглушить'}
         >
-          {muted ? '🔇' : '🔊'}
+          <Sprite name={muted ? 'mute' : 'sound'} size={22} />
         </button>
       </header>
 

@@ -5,6 +5,7 @@
 import { useEffect } from 'react'
 import { audio } from '../audio/audioManager.js'
 import { haptic } from '../tma/telegram.js'
+import { raceById } from '../data/races.js'
 
 /**
  * Отклик на нажатие — один на всё приложение.
@@ -161,6 +162,28 @@ export function Modal({ title, onClose, children, footer }) {
       <div className="pad-tg-bottom" />
     </div>
   )
+}
+
+/* ─────────────────────────── СПРАЙТЫ ─────────────────────────── */
+
+/**
+ * Пиксельная картинка из public/sprites. Путь лежит в CSS-классе, а не в
+ * инлайновом стиле: только так сборщик перепишет адрес, когда игра живёт
+ * в подпапке (GitHub Pages).
+ */
+export function Sprite({ name, size = 24, className = '' }) {
+  return (
+    <span
+      className={`sprite sprite-${name} ${className}`}
+      style={{ width: size, height: size }}
+      aria-hidden="true"
+    />
+  )
+}
+
+/** Знак расы — им подписаны свитки и команда. */
+export function RaceIcon({ race, size = 24, className = '' }) {
+  return <Sprite name={raceById(race).sprite} size={size} className={className} />
 }
 
 /* ─────────────────────────── КОСТЬ ─────────────────────────── */

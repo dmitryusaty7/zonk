@@ -225,6 +225,37 @@
     filter: saturate(0.85) contrast(1.1) drop-shadow(0 var(--px) 0 rgba(7, 13, 16, 0.7));
   }
 
+  /* Пиксельные картинки таверны: расы, утварь, звук */
+  .sprite {
+    display: inline-block;
+    flex: none;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 var(--px) 0 rgba(7, 13, 16, 0.7));
+  }
+  .sprite-die { background-image: url('/sprites/die.png'); }
+  .sprite-fish { background-image: url('/sprites/fish.png'); }
+  .sprite-goblin { background-image: url('/sprites/goblin.png'); }
+  .sprite-mug { background-image: url('/sprites/mug.png'); }
+  .sprite-murloc { background-image: url('/sprites/murloc.png'); }
+  .sprite-mute { background-image: url('/sprites/mute.png'); }
+  .sprite-orc { background-image: url('/sprites/orc.png'); }
+  .sprite-skull { background-image: url('/sprites/skull.png'); }
+  .sprite-sound { background-image: url('/sprites/sound.png'); }
+  .sprite-troll { background-image: url('/sprites/troll.png'); }
+
+  /* Очаг: три кадра одной лентой, пламя дышит */
+  .hearth {
+    display: block;
+    background-image: url('/sprites/fire.png');
+    background-size: 300% 100%;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    animation: hearth 0.42s steps(1, end) infinite;
+  }
+
   /* Кость: костяной квадрат, очки — тоже квадраты, без единого скругления */
   .die {
     display: inline-grid;
@@ -660,6 +691,13 @@ html.is-shaking body {
 }
 .toast-in {
   animation: toast-in 0.18s steps(3, end);
+}
+
+/* Пламя очага: три кадра по кругу */
+@keyframes hearth {
+  0% { background-position: 0% 0; }
+  33.33% { background-position: 50% 0; }
+  66.66% { background-position: 100% 0; }
 }
 
 /* Планктон дышит — холодный маячок на активном игроке */

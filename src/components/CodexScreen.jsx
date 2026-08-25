@@ -9,7 +9,7 @@ import { RACES, raceById } from '../data/races.js'
 import { TERMS } from '../data/lore.js'
 import { validateSettings } from '../engine/rulesEngine.js'
 import SettingsPanel from './SettingsPanel.jsx'
-import { tap, Emblem } from './ui.jsx'
+import { tap, RaceIcon } from './ui.jsx'
 
 const MAX_CREW = 8
 
@@ -41,7 +41,7 @@ function Crew() {
                 }}
                 aria-label={`Сменить расу игрока ${r.name}. Сейчас: ${race.label}`}
               >
-                <Emblem mark={race.mark} size={26} />
+                <RaceIcon race={r.race} size={30} />
               </button>
               <input
                 className="field h-14 min-w-0 flex-1 px-2 text-[22px]"
