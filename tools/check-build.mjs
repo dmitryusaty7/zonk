@@ -11,7 +11,7 @@
 import puppeteer from 'puppeteer-core'
 import { existsSync } from 'node:fs'
 
-const URL = process.env.LETOPIS_URL || 'http://localhost:4173'
+const URL = process.env.ZONK_URL || process.env.LETOPIS_URL || 'http://localhost:4173'
 const BROWSERS = [
   'C:/Program Files/Google/Chrome/Application/chrome.exe',
   'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
@@ -83,11 +83,13 @@ ok(/Handjet/.test(fontsReady.used), 'заголовок им и набран')
 ok(/[А-Яа-я]/.test(fontsReady.cyrillic), 'кириллица в заголовке', fontsReady.cyrillic)
 
 // ── Текстуры ──
+// Пути относительные: приложение может жить в подпапке (GitHub Pages),
+// и абсолютный /textures/... там ведёт мимо.
 const textures = await page.evaluate(async () => {
-  const files = ['/textures/parchment.png', '/textures/wood.png', '/textures/linen.png', '/icons/icon-192.png']
+  const files = ['textures/parchment.png', 'textures/wood.png', 'textures/linen.png', 'icons/icon-192.png']
   const out = {}
   for (const f of files) {
-    const res = await fetch(f)
+    const res = await fetch(new URL(f, document.baseURI))
     out[f] = res.ok && (res.headers.get('content-type') || '').includes('image')
   }
   return out
