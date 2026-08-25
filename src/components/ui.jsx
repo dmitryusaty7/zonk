@@ -181,9 +181,20 @@ export function Sprite({ name, size = 24, className = '' }) {
   )
 }
 
-/** Знак расы — им подписаны свитки и команда. */
-export function RaceIcon({ race, size = 24, className = '' }) {
-  return <Sprite name={raceById(race).sprite} size={size} className={className} />
+/**
+ * Портрет моряка: две картинки в одной ленте (открытые и закрытые глаза).
+ * Моргание и покачивание навешаны стилями — рисовать десяток кадров ради
+ * этого незачем.
+ */
+export function RaceIcon({ race, size = 26, className = '' }) {
+  const sprite = raceById(race).sprite
+  return (
+    <span
+      className={`bust sprite-${sprite} ${className}`}
+      style={{ width: size, height: size }}
+      aria-hidden="true"
+    />
+  )
 }
 
 /* ─────────────────────────── КОСТЬ ─────────────────────────── */

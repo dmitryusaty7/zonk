@@ -10,7 +10,7 @@
  */
 import { useGameStore } from '../store/gameStore.js'
 import { TERMS } from '../data/lore.js'
-import { tap, Dice, Coin, Ribbon } from './ui.jsx'
+import { tap, Dice, Coin, Ribbon, Sprite } from './ui.jsx'
 
 /** Ряд таблицы комбинаций. */
 function Combo({ dice, name, value, note }) {
@@ -29,10 +29,13 @@ function Combo({ dice, name, value, note }) {
 }
 
 /** Ряд таблицы особых правил. */
-function Rule({ name, when, effect }) {
+function Rule({ name, when, effect, icon }) {
   return (
     <li className="frame-thin surf-board px-2 py-2">
-      <span className="goth block text-[19px] leading-tight text-gold">{name}</span>
+      <span className="goth flex items-center gap-1.5 text-[19px] leading-tight text-gold">
+        {icon && <Sprite name={icon} size={20} />}
+        {name}
+      </span>
       <span className="block text-[14px] leading-tight text-parch-dim">{when}</span>
       <span className="mt-0.5 block text-[14px] leading-tight text-orc-bright">{effect}</span>
     </li>
@@ -54,7 +57,11 @@ export default function RulesScreen() {
   return (
     <div className="pad-tg-top flex h-dvh flex-col">
       <header className="surf-orc frame-gold mx-2 px-3 py-3 text-center">
-        <h1 className="goth text-[32px] leading-none text-gold">ПРАВИЛА</h1>
+        <div className="flex items-center justify-center gap-3">
+          <Sprite name="anchor" size={26} />
+          <h1 className="goth text-[32px] leading-none text-gold">ПРАВИЛА</h1>
+          <Sprite name="anchor" size={26} />
+        </div>
         <p className="tiny mt-1 text-[12px] leading-none text-parch-dim">ИГРА НА ПЯТИ КОСТЯХ</p>
       </header>
 
@@ -134,6 +141,7 @@ export default function RulesScreen() {
             effect={`Соперник теряет −${s.backstab.penalty}`}
           />
           <Rule
+            icon="barrel"
             name={TERMS.barrel}
             when={`Дошёл до ${s.barrels.map((b) => b.value).join(' / ') || '—'} или перевалил`}
             effect="Садишься ровно на бочку, лишнее пропадает. Уйти — только к сундуку"

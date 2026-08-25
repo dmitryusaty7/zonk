@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './fonts.css';
+@import './sprites.css';
 
 /* ═══════════════════════════════════════════════════════════════
    ЗОНК — ЗОЛОТО ЮЖНЫХ МОРЕЙ
@@ -225,6 +226,22 @@
     filter: saturate(0.85) contrast(1.1) drop-shadow(0 var(--px) 0 rgba(7, 13, 16, 0.7));
   }
 
+  /* Портрет моряка: два кадра в ленте — моргает; качается отдельно,
+     трансформом, иначе пришлось бы рисовать вдвое больше кадров */
+  .bust {
+    display: inline-block;
+    flex: none;
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+    background-position: 0% 0;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 var(--px) 0 rgba(7, 13, 16, 0.75));
+    animation: blink 3.6s steps(1, end) infinite, sway 2.7s ease-in-out infinite;
+  }
+  /* У каждого свой ритм — иначе за столом кивают в такт, как заводные */
+  .bust:nth-of-type(2n) { animation-delay: -1.3s, -0.9s; }
+  .bust:nth-of-type(3n) { animation-delay: -2.1s, -1.8s; }
+
   /* Пиксельные картинки таверны: расы, утварь, звук */
   .sprite {
     display: inline-block;
@@ -235,16 +252,6 @@
     image-rendering: pixelated;
     filter: drop-shadow(0 var(--px) 0 rgba(7, 13, 16, 0.7));
   }
-  .sprite-die { background-image: url('/sprites/die.png'); }
-  .sprite-fish { background-image: url('/sprites/fish.png'); }
-  .sprite-goblin { background-image: url('/sprites/goblin.png'); }
-  .sprite-mug { background-image: url('/sprites/mug.png'); }
-  .sprite-murloc { background-image: url('/sprites/murloc.png'); }
-  .sprite-mute { background-image: url('/sprites/mute.png'); }
-  .sprite-orc { background-image: url('/sprites/orc.png'); }
-  .sprite-skull { background-image: url('/sprites/skull.png'); }
-  .sprite-sound { background-image: url('/sprites/sound.png'); }
-  .sprite-troll { background-image: url('/sprites/troll.png'); }
 
   /* Очаг: три кадра одной лентой, пламя дышит */
   .hearth {
@@ -691,6 +698,41 @@ html.is-shaking body {
 }
 .toast-in {
   animation: toast-in 0.18s steps(3, end);
+}
+
+/* Моряк моргает: второй кадр ленты — глаза закрыты */
+@keyframes blink {
+  0%, 92% { background-position: 0% 0; }
+  94%, 100% { background-position: 100% 0; }
+}
+
+/* И покачивается: ром своё дело знает */
+@keyframes sway {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  30% { transform: translateX(-1px) rotate(-2.5deg); }
+  70% { transform: translateX(1px) rotate(2.5deg); }
+}
+
+/* Фонарь качается на крюке */
+@keyframes lantern-swing {
+  0%, 100% { transform: rotate(-7deg); }
+  50% { transform: rotate(7deg); }
+}
+.lantern-hook {
+  transform-origin: 50% 8%;
+  animation: lantern-swing 3.4s ease-in-out infinite;
+}
+
+/* Краб перебегает по дну экрана и уходит за край */
+@keyframes crab-walk {
+  0% { transform: translateX(-30px) scaleX(1); }
+  46% { transform: translateX(calc(100vw - 10px)) scaleX(1); }
+  50% { transform: translateX(calc(100vw - 10px)) scaleX(-1); }
+  96% { transform: translateX(-30px) scaleX(-1); }
+  100% { transform: translateX(-30px) scaleX(1); }
+}
+.crab-walk {
+  animation: crab-walk 26s steps(40, end) infinite;
 }
 
 /* Пламя очага: три кадра по кругу */

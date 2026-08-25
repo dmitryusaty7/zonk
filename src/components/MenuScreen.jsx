@@ -88,11 +88,13 @@ export default function MenuScreen() {
         <p className="mt-1 text-[17px] leading-tight text-orc-bright">{TAVERN.subtitle}</p>
         <Ribbon className="mt-3">{TAVERN.place}</Ribbon>
 
-        {/* Очаг: единственный источник тепла в трюме */}
-        <div className="mt-3 flex items-end justify-center gap-3">
+        {/* Очаг, фонарь на крюке и всё, что стоит на полке у стойки */}
+        <div className="mt-3 flex items-end justify-center gap-2">
+          <Sprite name="bottle" size={26} />
           <Sprite name="mug" size={26} />
-          <span className="hearth h-[52px] w-[52px]" role="img" aria-label="Очаг" />
-          <Sprite name="fish" size={26} />
+          <span className="hearth h-[56px] w-[56px]" role="img" aria-label="Очаг" />
+          <Sprite name="lantern" size={30} className="lantern-hook" />
+          <Sprite name="parrot" size={26} />
         </div>
         <p className="mt-1.5 text-[14px] leading-tight text-parch-dark">
           кости · золото · ром · драка
@@ -190,6 +192,11 @@ export default function MenuScreen() {
           {TERMS.start.toUpperCase()}
         </button>
       </footer>
+
+      {/* Краб бегает по дну экрана и никому не мешает */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-0 h-6 overflow-hidden">
+        <Sprite name="crab" size={22} className="crab-walk" />
+      </div>
 
       {glory && <GloryModal onClose={() => setGlory(false)} />}
     </div>

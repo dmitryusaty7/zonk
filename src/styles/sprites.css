@@ -1,0 +1,22 @@
+/* СПРАЙТЫ ТАВЕРНЫ — сгенерировано tools/gen-assets.mjs.
+ * Руками не править: перезапусти  node tools/gen-assets.mjs
+ */
+
+@layer components {
+  .sprite-anchor { background-image: url('/sprites/anchor.png'); }
+  .sprite-barrel { background-image: url('/sprites/barrel.png'); }
+  .sprite-bottle { background-image: url('/sprites/bottle.png'); }
+  .sprite-crab { background-image: url('/sprites/crab.png'); }
+  .sprite-die { background-image: url('/sprites/die.png'); }
+  .sprite-fish { background-image: url('/sprites/fish.png'); }
+  .sprite-goblin { background-image: url('/sprites/goblin.png'); }
+  .sprite-lantern { background-image: url('/sprites/lantern.png'); }
+  .sprite-mug { background-image: url('/sprites/mug.png'); }
+  .sprite-murloc { background-image: url('/sprites/murloc.png'); }
+  .sprite-mute { background-image: url('/sprites/mute.png'); }
+  .sprite-orc { background-image: url('/sprites/orc.png'); }
+  .sprite-parrot { background-image: url('/sprites/parrot.png'); }
+  .sprite-skull { background-image: url('/sprites/skull.png'); }
+  .sprite-sound { background-image: url('/sprites/sound.png'); }
+  .sprite-troll { background-image: url('/sprites/troll.png'); }
+}
