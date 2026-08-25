@@ -71,7 +71,8 @@ export default function App() {
       {/* За столом фонарь только мешал бы кнопкам в балке */}
       {screen !== 'game' && <HangingLantern />}
       <FlyBy />
-      <Toast />
+      {/* За столом реплики вылетают с кнопки — плашка нужна лишь вне партии */}
+      {screen !== 'game' && <Toast />}
     </>
   )
 }

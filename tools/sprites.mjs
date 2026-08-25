@@ -16,6 +16,7 @@
  *   r/R красное сукно       g/G золото       a/A латунь
  *   w/W дерево              s/S сталь        v/V бутылочное стекло
  *   f/F/e огонь             t тёмная кожа
+ *   x спина рыбы            z её бок
  */
 
 export const PALETTE = {
@@ -34,6 +35,7 @@ export const PALETTE = {
   a: [150, 108, 44], A: [212, 168, 74],
   w: [96, 64, 32], W: [142, 102, 56],
   s: [104, 120, 128], S: [178, 192, 200],
+  x: [78, 94, 104], z: [136, 152, 160],
   v: [46, 96, 62], V: [96, 154, 96],
   f: [204, 72, 20], F: [255, 152, 42], e: [255, 238, 158],
 }
@@ -397,24 +399,33 @@ export const PROPS = {
     '................',
     '................',
   ],
-  // Рыба-пила: трофей, которым хвастается хозяин
+  // Рыба-пила: трофей хозяина. Зубья с обеих сторон рыла,
+  // спинной и грудной плавники, раздвоенный хвост.
   sawfish: [
-    '................................',
-    '..S.S.S.S.S.........kk..........',
-    '.SSSSSSSSSSS.......kCCk.........',
-    '.SssssssssssS......kCCCk........',
-    '.SSSSSSSSSSSSkkkkkkkCCCCkk.kk...',
-    '..S.S.S.S.S.kCCCCCCCCCCCCCCkCCCk',
-    '............kCBCCCCCCCCCCCCCCCCk',
-    '............kCCCCCCCCCCCCCCCCCCk',
-    '............kCCCCCCCCCCCCCCCCCk.',
-    '............kkCCCCCCCCCCCCCCkk..',
-    '.............kkCCCCCCCCCCkk.....',
-    '...............kkkCCCkkk........',
-    '..................kk............',
-    '................................',
-    '................................',
-    '................................',
+    '..................................................',
+    '..............................kk..................',
+    '.............................kxxk.................',
+    '............................kxxxxk................',
+    '...........................kxxxxxxk...............',
+    '..........................kxxxxxxxxk..............',
+    '.S.S.S.S.S.S.............kxxxxxxxxxxk.........kk..',
+    'kSSSSSSSSSSSSk..........kxxxxxxxxxxxxk......kkxxk.',
+    'kSzzzzzzzzzzSkkkkkkkkkkkxxxxxxxxxxxxxxkkkkkxxxxxk.',
+    'kSSSSSSSSSSSSkzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzxxxxk.',
+    '.S.S.S.S.S.S.kzzBzzzzzzzzzzzzzzzzzzzzzzzzzzzzxxxk.',
+    '.............kzzzzRzzzzzzzzzzzzzzzzzzzzzzzzzzxxk..',
+    '.............kzzzzRzzzzzzzzzzzzzzzzzzzzzzzzzxxk...',
+    '.............kSzzzRzzzzzzzzzzzzzzzzzzzzzzzzxxk....',
+    '..............kSSzzzzzzzzzzzzzzzzzzzzzzzzzxxk.....',
+    '...............kSSSSSSzzzzzzzzzzzzzzzzzzzxxk......',
+    '................kkkkkSSSSSSSSSSSSSSSSSSSxxk.......',
+    '......................kkkkkkkSSSSSSSSSSxxk........',
+    '............................kSSkkkkkkkkxk.........',
+    '...........................kSSSk......kk..........',
+    '..........................kSSSSk..................',
+    '..........................kSSk....................',
+    '...........................kk.....................',
+    '..................................................',
   ],
   // Рыба
   fish: [

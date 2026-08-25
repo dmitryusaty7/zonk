@@ -683,6 +683,34 @@
     overflow-y: auto;
   }
 
+  /*
+   * Выкрик с кнопки: реплика всплывает над ней и тает.
+   * Отдельная плашка занимала пол-экрана и закрывала свитки —
+   * теперь текст живёт ровно там, где было нажатие.
+   */
+  .shout {
+    position: absolute;
+    bottom: calc(100% - 4px);
+    left: 0;
+    right: 0;
+    z-index: 20;
+    margin: 0 auto;
+    width: fit-content;
+    max-width: 100%;
+    padding: 4px 10px;
+    text-align: center;
+    font-size: 15px;
+    line-height: 1.15;
+    pointer-events: none;
+    box-shadow:
+      0 0 0 var(--px) var(--color-ink-deep),
+      0 var(--px2) 0 0 rgba(7, 13, 16, 0.55);
+    animation: shout-up 3.6s steps(12, end) forwards;
+  }
+  .shout-ok { background: var(--color-parch); color: var(--color-ink); }
+  .shout-win { background: var(--color-gold); color: var(--color-ink-deep); }
+  .shout-bad { background: var(--color-blood); color: var(--color-bone); }
+
   /* Отступы под чужой хром: Telegram сверху, вырез телефона снизу */
   .pad-tg-top {
     padding-top: calc(var(--tg-top) + 8px);
@@ -848,6 +876,14 @@ html.is-shaking body {
 }
 .crab-walk {
   animation: crab-walk 26s steps(40, end) infinite;
+}
+
+/* Выкрик поднимается над кнопкой и тает */
+@keyframes shout-up {
+  0% { opacity: 0; transform: translateY(10px) scale(0.9); }
+  8% { opacity: 1; transform: translateY(0) scale(1); }
+  82% { opacity: 1; transform: translateY(-6px); }
+  100% { opacity: 0; transform: translateY(-14px); }
 }
 
 /* Что-то пролетает через экран: бутылка в стену, кость за борт */

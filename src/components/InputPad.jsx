@@ -13,12 +13,14 @@ import { useGameStore, selectCurrent } from '../store/gameStore.js'
 import { barrelNeed } from '../engine/rulesEngine.js'
 import { TERMS, plural, SIPS } from '../data/lore.js'
 import { tap, RaceIcon, Coin } from './ui.jsx'
+import { useReaction } from './useReaction.js'
 
 /** Ходовые номиналы. Крупные суммы набираются повтором. */
 const QUICK = [5, 10, 25, 50, 100]
 
 export default function InputPad() {
   const boxRef = useRef(null)
+  const say = useReaction()
   const player = useGameStore(selectCurrent)
   const settings = useGameStore((s) => s.settings)
   const pad = useGameStore((s) => s.pad)
@@ -144,6 +146,25 @@ export default function InputPad() {
       </div>
 
       {/* ── ГЛАВНОЕ ДЕЙСТВИЕ ── */}
+      {/* Реплика вылетает прямо отсюда: отдельная плашка занимала
+          пол-экрана и мешала смотреть на свитки. */}
+      <div className="relative">
+        {say && (
+          <p
+            key={say.at}
+            className={`shout ${
+              say.kind === 'error'
+                ? 'shout-bad'
+                : say.kind === 'win'
+                  ? 'shout-win'
+                  : 'shout-ok'
+            }`}
+            role="status"
+            aria-live="polite"
+          >
+            {say.text}
+          </p>
+        )}
       <button
         type="button"
         className={`pad-main mb-1.5 w-full py-6 text-[30px] leading-none ${
@@ -154,6 +175,7 @@ export default function InputPad() {
       >
         {winning ? TERMS.win : `ЗАПИСАТЬ${total > 0 ? ` ${total}` : ''}`}
       </button>
+      </div>
 
       {/* ── Провал хода: на бочке эта кнопка особенно нужна ── */}
       <button
