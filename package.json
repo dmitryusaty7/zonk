@@ -1,0 +1,33 @@
+{
+  "name": "zonk-south-seas",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "ЗОНК — Золото Южных Морей. Telegram Mini App для счёта в кости.",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "npm run assets && vite build",
+    "preview": "vite preview --host --port 4173",
+    "assets": "node tools/gen-assets.mjs",
+    "fonts": "node tools/fetch-fonts.mjs",
+    "test": "node --test src/engine/",
+    "shots": "node tools/shots.mjs",
+    "check-build": "node tools/check-build.mjs",
+    "single": "npm run build && node tools/build-single.mjs",
+    "check-single": "node tools/check-single.mjs",
+    "tg": "node tools/tg-setup.mjs"
+  },
+  "dependencies": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zustand": "5.0.15"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.3.3",
+    "@vitejs/plugin-react": "4.7.0",
+    "puppeteer-core": "^24.43.1",
+    "tailwindcss": "4.3.3",
+    "vite": "6.4.3",
+    "vite-plugin-pwa": "1.3.0"
+  }
+}

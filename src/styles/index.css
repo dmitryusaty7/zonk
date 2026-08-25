@@ -1,0 +1,577 @@
+@import 'tailwindcss';
+@import './fonts.css';
+
+/* ═══════════════════════════════════════════════════════════════
+   ЗОНК — ЗОЛОТО ЮЖНЫХ МОРЕЙ
+   Тёмный трюм, мокрое от соли дерево, тёплый свет масляных фонарей
+   и холодные искры магического планктона.
+   Пиксель строг: никаких скруглений, мягких теней и сглаживания.
+   ═══════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* ── Глубина ── */
+  --color-soot: #070d10; /* забортная тьма */
+  --color-ink: #24261c; /* чем пишут по карте */
+  --color-ink-deep: #0b1216;
+
+  /* ── Морская карта: на ней ведут счёт ── */
+  --color-parch: #ded0ab;
+  --color-parch-dim: #bfae86;
+  --color-parch-dark: #93866a;
+  --color-bone: #ded0ab;
+
+  /* ── Мокрая палуба ── */
+  --color-wood: #24333a;
+  --color-wood-dark: #16232a;
+  --color-wood-light: #354a52;
+
+  /* ── Планктон: холодное свечение ── */
+  --color-orc: #1f4a4a;
+  --color-orc-dark: #12302f;
+  --color-orc-light: #2f8f80;
+  --color-orc-bright: #3ff0d0;
+
+  /* ── Масляный фонарь: тёплый свет ── */
+  --color-lamp: #e0913a;
+  --color-lamp-light: #f7c979;
+
+  /* ── Золото ── */
+  --color-gold: #e8b93c;
+  --color-gold-light: #ffe9a0;
+  --color-gold-dark: #8a6a14;
+
+  /* ── Кровь и тряпки ── */
+  --color-blood: #c0392b;
+  --color-blood-bright: #e0503c;
+  --color-blood-dark: #6e1812;
+
+  --color-moss: #4a7a52;
+
+  /* ── Перья ──
+     Только Handjet и Tiny5: оба тяжёлые и с кириллицей.
+     В лёгких пиксельных шрифтах пятёрка неотличима от «S». */
+  --font-goth: 'Handjet', ui-monospace, monospace;
+  --font-scroll: 'Handjet', ui-monospace, monospace;
+  --font-tiny: 'Tiny5', 'Handjet', ui-monospace, monospace;
+
+  /* ── Мера пикселя ── */
+  --px: 2px;
+  --px2: 4px;
+  --px3: 6px;
+}
+
+/* Отступы Telegram; в обычном браузере — нули, вёрстка одинаковая */
+:root {
+  --tg-top: 0px;
+  --tg-bottom: 0px;
+}
+
+/* ─────────────────────────── ОСНОВА ─────────────────────────── */
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    background: var(--color-soot);
+    image-rendering: pixelated;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    /* Handjet узкий — без веса 600 мелкий текст плывёт */
+    font-family: var(--font-scroll);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--color-ink);
+    background-color: var(--color-soot);
+    background-image: url('/textures/linen.png');
+    background-size: 128px 128px;
+    overscroll-behavior: none;
+    -webkit-font-smoothing: none;
+    font-smooth: never;
+    text-rendering: optimizeSpeed;
+  }
+
+  /* Тёплое пятно масляного фонаря сверху — источник света в трюме */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(120% 55% at 50% -8%, rgba(224, 145, 58, 0.22), transparent 60%),
+      radial-gradient(90% 40% at 50% 108%, rgba(63, 240, 208, 0.08), transparent 65%);
+  }
+
+  body > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  body,
+  button {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  input {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+
+  button {
+    font-family: inherit;
+    font-weight: 800;
+    color: inherit;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-goth);
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-wood-dark);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-orc-light);
+  }
+}
+
+/* ─────────────────────────── ПОВЕРХНОСТИ ─────────────────────────── */
+
+@layer components {
+  /* Морская карта — основа свитков */
+  .surf-parch {
+    background-color: var(--color-parch);
+    background-image: url('/textures/parchment.png');
+    background-size: 256px 256px;
+    image-rendering: pixelated;
+  }
+
+  /* Мокрая палуба — рамы, панели, кнопки */
+  .surf-wood {
+    background-color: var(--color-wood);
+    background-image: url('/textures/wood.png');
+    background-size: 96px 96px;
+    image-rendering: pixelated;
+  }
+
+  /* Тёмный трюм — под длинные тексты: кодекс, журнал, списки */
+  .surf-board {
+    background-color: var(--color-wood-dark);
+    background-image:
+      linear-gradient(rgba(7, 13, 16, 0.66), rgba(7, 13, 16, 0.66)),
+      url('/textures/wood.png');
+    background-size: auto, 96px 96px;
+    image-rendering: pixelated;
+  }
+
+  /* Тёмная бирюза — заголовки и главные панели */
+  .surf-orc {
+    background-color: var(--color-orc);
+    background-image:
+      linear-gradient(rgba(18, 48, 47, 0.6), rgba(18, 48, 47, 0.6)),
+      url('/textures/wood.png');
+    background-size: auto, 96px 96px;
+    image-rendering: pixelated;
+  }
+
+  /* ── Красная тряпка: висит над стойкой и на щитах ── */
+  .ribbon {
+    position: relative;
+    background-image: url('/textures/ribbon.png');
+    background-size: 64px 100%;
+    background-repeat: repeat-x;
+    image-rendering: pixelated;
+    color: var(--color-bone);
+    box-shadow:
+      0 0 0 var(--px) var(--color-blood-dark),
+      inset 0 var(--px) 0 0 rgba(255, 220, 200, 0.25);
+  }
+  .ribbon::before,
+  .ribbon::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--px3);
+    background: var(--color-blood-dark);
+  }
+  .ribbon::before {
+    left: calc(-1 * var(--px3));
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 66%);
+  }
+  .ribbon::after {
+    right: calc(-1 * var(--px3));
+    clip-path: polygon(0 0, 100% 0, 100% 66%, 0 100%);
+  }
+
+  /* Метки рас — эмодзи, притянутые к палитре трюма */
+  .emblem {
+    filter: saturate(0.85) contrast(1.1) drop-shadow(0 var(--px) 0 rgba(7, 13, 16, 0.7));
+  }
+
+  /* Золотой — монета рядом с числом */
+  .coin {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.12em;
+    background-image: url('/icons/coin.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+  }
+
+  /* ── Пиксельные рамы ── */
+  .frame {
+    position: relative;
+    box-shadow:
+      0 0 0 var(--px2) var(--color-ink-deep),
+      inset var(--px) var(--px) 0 0 rgba(222, 208, 171, 0.24),
+      inset calc(-1 * var(--px)) calc(-1 * var(--px)) 0 0 rgba(7, 13, 16, 0.6);
+  }
+
+  .frame-gold {
+    box-shadow:
+      0 0 0 var(--px) var(--color-gold),
+      0 0 0 var(--px2) var(--color-ink-deep),
+      inset var(--px) var(--px) 0 0 rgba(255, 233, 160, 0.3),
+      inset calc(-1 * var(--px)) calc(-1 * var(--px)) 0 0 rgba(7, 13, 16, 0.65);
+  }
+
+  .frame-neon {
+    box-shadow:
+      0 0 0 var(--px) var(--color-orc-bright),
+      0 0 0 var(--px2) var(--color-ink-deep),
+      0 0 18px 0 rgba(63, 240, 208, 0.25);
+  }
+
+  .frame-thin {
+    box-shadow:
+      0 0 0 var(--px) var(--color-ink-deep),
+      inset var(--px) var(--px) 0 0 rgba(222, 208, 171, 0.18),
+      inset calc(-1 * var(--px)) calc(-1 * var(--px)) 0 0 rgba(7, 13, 16, 0.5);
+  }
+
+  /* Гвозди по углам */
+  .nailed::before,
+  .nailed::after {
+    content: '';
+    position: absolute;
+    width: var(--px3);
+    height: var(--px3);
+    background: var(--color-gold);
+    box-shadow: 0 0 0 var(--px) var(--color-ink-deep);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .nailed::before {
+    top: var(--px2);
+    left: var(--px2);
+  }
+  .nailed::after {
+    top: var(--px2);
+    right: var(--px2);
+  }
+
+  /* ── Кнопки ── */
+  .btn {
+    font-family: var(--font-goth);
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    color: var(--color-parch);
+    background-color: var(--color-wood);
+    background-image: url('/textures/wood.png');
+    background-size: 96px 96px;
+    image-rendering: pixelated;
+    box-shadow:
+      0 0 0 var(--px) var(--color-ink-deep),
+      inset var(--px) var(--px) 0 0 rgba(222, 208, 171, 0.26),
+      inset calc(-1 * var(--px)) calc(-1 * var(--px)) 0 0 rgba(0, 0, 0, 0.6),
+      0 var(--px2) 0 0 var(--color-ink-deep);
+    transition: none;
+  }
+  .btn:active:not(:disabled) {
+    transform: translateY(var(--px2));
+    box-shadow:
+      0 0 0 var(--px) var(--color-ink-deep),
+      inset var(--px) var(--px) 0 0 rgba(0, 0, 0, 0.55),
+      inset calc(-1 * var(--px)) calc(-1 * var(--px)) 0 0 rgba(222, 208, 171, 0.16);
+  }
+  /* Выключенная кнопка — глухая доска, а не полупрозрачное пятно:
+     сквозь прозрачность просвечивал фон трюма и рябил планктоном. */
+  .btn:disabled {
+    color: rgba(222, 208, 171, 0.34);
+    background-color: #1b262c;
+    background-image: none;
+    box-shadow:
+      0 0 0 var(--px) var(--color-ink-deep),
+      inset var(--px) var(--px) 0 0 rgba(222, 208, 171, 0.08);
+  }
+
+  .btn-gold {
+    color: var(--color-ink-deep);
+    background-color: var(--color-gold);
+    background-image: none;
+    box-shadow:
+      0 0 0 var(--px) var(--color-ink-deep),
+      inset var(--px) var(--px) 0 0 var(--color-gold-light),
+      inset calc(-1 * var(--px)) calc(-1 * var(--px)) 0 0 var(--color-gold-dark),
+      0 var(--px2) 0 0 var(--color-ink-deep);
+  }
+  .btn-gold:active:not(:disabled) {
+    transform: translateY(var(--px2));
+    box-shadow:
+      0 0 0 var(--px) var(--color-ink-deep),
+      inset var(--px) var(--px) 0 0 var(--color-gold-dark),
+      inset calc(-1 * var(--px)) calc(-1 * var(--px)) 0 0 var(--color-gold-light);
+  }
+
+  /* Победная — золото с холодным ореолом планктона */
+  .btn-chest {
+    color: var(--color-ink-deep);
+    background-color: var(--color-gold);
+    background-image: none;
+    box-shadow:
+      0 0 0 var(--px) var(--color-orc-bright),
+      0 0 0 var(--px2) var(--color-ink-deep),
+      inset var(--px) var(--px) 0 0 var(--color-gold-light),
+      0 0 26px 0 rgba(63, 240, 208, 0.4),
+      0 var(--px2) 0 0 var(--color-ink-deep);
+  }
+
+  .btn-lamp {
+    color: var(--color-ink-deep);
+    background-color: var(--color-lamp);
+    background-image: none;
+    box-shadow:
+      0 0 0 var(--px) var(--color-ink-deep),
+      inset var(--px) var(--px) 0 0 var(--color-lamp-light),
+      inset calc(-1 * var(--px)) calc(-1 * var(--px)) 0 0 #8a4f18,
+      0 var(--px2) 0 0 var(--color-ink-deep);
+  }
+  .btn-lamp:active:not(:disabled) {
+    transform: translateY(var(--px2));
+  }
+
+  .btn-orc {
+    color: var(--color-bone);
+    background-color: var(--color-orc);
+    background-image: none;
+    box-shadow:
+      0 0 0 var(--px) var(--color-ink-deep),
+      inset var(--px) var(--px) 0 0 var(--color-orc-light),
+      inset calc(-1 * var(--px)) calc(-1 * var(--px)) 0 0 var(--color-orc-dark),
+      0 var(--px2) 0 0 var(--color-ink-deep);
+  }
+  .btn-orc:active:not(:disabled) {
+    transform: translateY(var(--px2));
+  }
+
+  .btn-blood {
+    color: var(--color-bone);
+    background-color: var(--color-blood);
+    background-image: none;
+    box-shadow:
+      0 0 0 var(--px) var(--color-ink-deep),
+      inset var(--px) var(--px) 0 0 var(--color-blood-bright),
+      inset calc(-1 * var(--px)) calc(-1 * var(--px)) 0 0 var(--color-blood-dark),
+      0 var(--px2) 0 0 var(--color-ink-deep);
+  }
+  .btn-blood:active:not(:disabled) {
+    transform: translateY(var(--px2));
+  }
+
+  /* Редкие штрафы — нарочно мелкие и тусклые */
+  .btn-foul {
+    font-family: var(--font-tiny);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    color: var(--color-parch-dim);
+    background-color: #2a2018;
+    background-image: linear-gradient(rgba(110, 24, 18, 0.28), rgba(110, 24, 18, 0.28));
+    box-shadow:
+      0 0 0 var(--px) var(--color-blood-dark),
+      inset calc(-1 * var(--px)) calc(-1 * var(--px)) 0 0 rgba(0, 0, 0, 0.5);
+  }
+  .btn-foul:active:not(:disabled) {
+    transform: translateY(var(--px));
+  }
+
+  /* ── Поля ввода ── */
+  .field {
+    font-family: var(--font-scroll);
+    font-weight: 800;
+    color: var(--color-ink);
+    background-color: var(--color-parch);
+    background-image: url('/textures/parchment.png');
+    background-size: 256px 256px;
+    border: none;
+    outline: none;
+    box-shadow:
+      0 0 0 var(--px) var(--color-ink-deep),
+      inset var(--px) var(--px) 0 0 rgba(7, 13, 16, 0.35);
+  }
+  .field:focus {
+    box-shadow:
+      0 0 0 var(--px) var(--color-orc-bright),
+      0 0 0 var(--px2) var(--color-ink-deep),
+      inset var(--px) var(--px) 0 0 rgba(7, 13, 16, 0.35);
+  }
+
+  /* ── Строка свитка ── */
+  .scroll-line {
+    border-bottom: var(--px) dashed rgba(36, 38, 28, 0.3);
+  }
+
+  /* Число на бочке — обручи и золотое кольцо */
+  .on-barrel {
+    position: relative;
+    color: var(--color-ink-deep);
+    background: rgba(232, 185, 60, 0.34);
+    box-shadow:
+      0 0 0 var(--px) var(--color-wood-dark),
+      0 0 0 var(--px2) var(--color-gold),
+      0 0 0 var(--px3) var(--color-wood-dark);
+  }
+
+  /* Ржавый крючок — пустой бросок */
+  .bolt-hook {
+    display: block;
+    width: 20px;
+    height: 36px;
+    margin: 0 auto;
+    background-image: url('/textures/hook.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    image-rendering: pixelated;
+  }
+
+  /* Рваная сеть — красный крест поверх трёх крючков */
+  .bolt-cross {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to bottom right, transparent calc(50% - var(--px)), var(--color-blood-bright) calc(50% - var(--px)), var(--color-blood-bright) calc(50% + var(--px)), transparent calc(50% + var(--px))),
+      linear-gradient(to bottom left, transparent calc(50% - var(--px)), var(--color-blood-bright) calc(50% - var(--px)), var(--color-blood-bright) calc(50% + var(--px)), transparent calc(50% + var(--px)));
+    opacity: 0.92;
+  }
+
+  /* Чей ход — свиток в холодном свете планктона.
+     Рамка нарочно толстая: за столом на четверых взгляд должен
+     находить активного мгновенно, без разглядывания. */
+  .active-scroll {
+    box-shadow:
+      0 0 0 3px var(--color-orc-bright),
+      0 0 0 7px var(--color-ink-deep),
+      0 0 0 9px rgba(63, 240, 208, 0.45),
+      0 0 34px 2px rgba(63, 240, 208, 0.5);
+    z-index: 2;
+  }
+
+  /* Неактивные свитки слегка уходят в тень — контраст с активным */
+  .idle-scroll {
+    filter: brightness(0.82) saturate(0.85);
+  }
+}
+
+/* ─────────────────────────── УТИЛИТЫ ─────────────────────────── */
+
+@layer utilities {
+  .tiny {
+    font-family: var(--font-tiny);
+    font-weight: 400;
+    letter-spacing: 0.06em;
+  }
+  .goth {
+    font-family: var(--font-goth);
+    font-weight: 900;
+  }
+  /* Числа — всегда самым тяжёлым начертанием: в лёгком «5» плывёт */
+  .num {
+    font-family: var(--font-goth);
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .pixelated {
+    image-rendering: pixelated;
+  }
+  /* Отступы под чужой хром: Telegram сверху, вырез телефона снизу */
+  .pad-tg-top {
+    padding-top: calc(var(--tg-top) + 8px);
+  }
+  .pad-tg-bottom {
+    padding-bottom: calc(var(--tg-bottom) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* ─────────────────────────── ДВИЖЕНИЕ ─────────────────────────── */
+
+@keyframes shake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(calc(-2px * var(--shake-force, 1)), calc(1px * var(--shake-force, 1))); }
+  40% { transform: translate(calc(2px * var(--shake-force, 1)), calc(-1px * var(--shake-force, 1))); }
+  60% { transform: translate(calc(-1px * var(--shake-force, 1)), calc(-2px * var(--shake-force, 1))); }
+  80% { transform: translate(calc(1px * var(--shake-force, 1)), calc(2px * var(--shake-force, 1))); }
+}
+html.is-shaking body {
+  animation: shake 0.4s steps(2, end);
+}
+
+@keyframes ink-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.ink-in {
+  animation: ink-in 0.18s steps(3, end);
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.toast-in {
+  animation: toast-in 0.18s steps(3, end);
+}
+
+/* Планктон дышит — холодный маячок на активном игроке */
+@keyframes plankton {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+.torch {
+  animation: plankton 1.6s steps(2, end) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.is-shaking body,
+  .ink-in,
+  .toast-in,
+  .torch {
+    animation: none;
+  }
+}

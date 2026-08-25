@@ -1,0 +1,16 @@
+node_modules/
+dist/
+shots/
+*.log
+
+# Собирается командой npm run single, в репозитории не нужен
+zonk.html
+
+# Секреты — только в переменных окружения, никогда в файлах
+.env
+.env.*
+
+# Посторонние файлы, лежащие в этой же папке, — не часть игры
+hide_hdd_script.sh
+toggle_hide_disks.ps1
+single-check.png
