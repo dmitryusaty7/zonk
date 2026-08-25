@@ -101,12 +101,6 @@ export default function SettingsPanel({ locked = false }) {
       <Rubric hint={RULE_HINTS.bolts}>Ржавые крючки</Rubric>
       <Stepper label="Крючков до рваной сети" value={s.bolts.perPenalty} onChange={(v) => setSetting('bolts.perPenalty', v)} step={1} min={0} max={9} />
       <Stepper label="Рваная сеть стоит" value={s.bolts.penalty} onChange={(v) => setSetting('bolts.penalty', v)} step={10} min={0} max={1000} />
-      <Latch
-        label="Пускать счёт ниже нуля"
-        checked={s.allowNegative}
-        onChange={(v) => setSetting('allowNegative', v)}
-        hint={RULE_HINTS.allowNegative}
-      />
 
       {/* ── СУД КОРЧМАРЯ ── */}
       <Rubric hint={RULE_HINTS.fouls}>Суд Хозяина Бухты</Rubric>

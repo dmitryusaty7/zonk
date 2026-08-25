@@ -391,23 +391,31 @@ test('кость за борт на бочке жжёт глоток, а не з
   assert.equal(g.players[0].bolts, 0)
 })
 
-test('по обычаю Бухты счёт упирается в ноль', () => {
+test('счёт упирается в ноль и ниже не идёт', () => {
   let g = game()
-  // настройки по умолчанию: в долг не пишем
-  assert.equal(g.settings.allowNegative, false)
   g = apply(g, { type: 'foul', foul: 'mud', playerId: g.players[0].id })
   g = apply(g, { type: 'foul', foul: 'mud', playerId: g.players[0].id })
   g = apply(g, { type: 'foul', foul: 'mud', playerId: g.players[0].id })
   assert.equal(g.players[0].score, 0, 'рваная сеть не загнала в минус')
 })
 
-test('минус можно разрешить настройкой', () => {
-  let g = game(2, { allowNegative: true })
-  // три крючка подряд рвут сеть на -100, но ниже нуля не пускают
-  g = apply(g, { type: 'foul', foul: 'mud', playerId: g.players[0].id })
-  g = apply(g, { type: 'foul', foul: 'mud', playerId: g.players[0].id })
-  g = apply(g, { type: 'foul', foul: 'mud', playerId: g.players[0].id })
-  assert.equal(g.players[0].score, -100, 'с разрешённым минусом долг пишется')
+test('гарпун не уводит соперника в долг', () => {
+  let g = game()
+  Object.assign(g.players[0], { score: 30, entered: true })
+  Object.assign(g.players[1], { score: 0, entered: true })
+  // второй встаёт ровно на 30 — гарпун снял бы 50, но дно есть дно
+  g = apply(g, { type: 'score', points: 30, playerId: g.players[1].id })
+  assert.equal(g.players[0].score, 0, 'остановились на нуле, а не на -20')
+})
+
+test('падение с бочки не пробивает дно', () => {
+  let g = game()
+  Object.assign(g.players[0], {
+    score: 80, entered: true,
+    barrel: { value: 80, attempts: 1, fallPenalty: 120, used: 0 },
+  })
+  g = apply(g, { type: 'bolt' })
+  assert.equal(g.players[0].score, 0, '80 - 120 упёрлось в ноль')
 })
 
 // ─────────────────────── ПОРЯДОК ХОДОВ ───────────────────────

@@ -369,16 +369,17 @@ export const useGameStore = create()(
     }),
     {
       name: 'zonk-bay',
-      version: 4,
+      version: 5,
       /**
-       * Пока переключателя «ниже нуля» не было в Кодексе, у всех лежало
-       * старое значение true, выбрать которое было негде. Поднимая версию,
-       * приводим сохранённое к новому обычаю — минус выключен.
+       * Настройка «ниже нуля» убрана: дно счёта теперь жёсткое правило
+       * движка. Вычищаем её из сохранённых настроек, чтобы в сундуке
+       * памяти не лежал мусор от прошлых версий.
        */
       migrate: (state, from) => {
-        if (!state) return state
-        if (from < 4 && state.settings) {
-          return { ...state, settings: { ...state.settings, allowNegative: false } }
+        if (!state?.settings) return state
+        if (from < 5) {
+          const { allowNegative, exactFinish, courage, scoreStep, ...rest } = state.settings
+          return { ...state, settings: { ...rest, scoreStep: scoreStep ?? 5, exactFinish: true } }
         }
         return state
       },

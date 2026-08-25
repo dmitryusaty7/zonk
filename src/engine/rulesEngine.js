@@ -65,11 +65,6 @@ export const DEFAULT_SETTINGS = {
     crooked: { label: 'Кривой штурвал' },
   },
 
-  /**
-   * Пускать ли счёт ниже нуля.
-   * По обычаю Бухты — нет: за столом долгов не пишут, ноль так ноль.
-   */
-  allowNegative: false,
 }
 
 // ────────────────────────────── ИГРОКИ ──────────────────────────────
@@ -126,8 +121,13 @@ export function isBarrelValue(settings, value) {
   return settings.barrels.some((b) => b.value === value)
 }
 
-function clampScore(score, settings) {
-  return settings.allowNegative ? score : Math.max(0, score)
+/**
+ * Дно счёта — ноль. В Бухте долгов не пишут: любое списание,
+ * которое увело бы игрока в минус, останавливается на нуле.
+ * Настройки у этого правила нет намеренно — так играют всегда.
+ */
+function clampScore(score) {
+  return Math.max(0, score)
 }
 
 function knockOffAllowed(settings, playerCount) {
@@ -218,7 +218,7 @@ export function resolveTurn(game, action) {
 
     if (used >= attempts) {
       const penalty = me.barrel.fallPenalty
-      me.score = clampScore(me.score - penalty, settings)
+      me.score = clampScore(me.score - penalty)
       me.barrel = null
       me.stats.penalties += 1
       push(me.id, 'barrelFall', -penalty, { note: 'Глотки кончились' })
@@ -244,7 +244,7 @@ export function resolveTurn(game, action) {
       newEntries.forEach((e) => {
         if (ids.includes(e.id)) e.crossed = true
       })
-      me.score = clampScore(me.score - settings.bolts.penalty, settings)
+      me.score = clampScore(me.score - settings.bolts.penalty)
       me.bolts = 0
       me.stats.penalties += 1
       push(me.id, 'boltPenalty', -settings.bolts.penalty, {
@@ -376,7 +376,7 @@ export function resolveTurn(game, action) {
       players.forEach((o) => {
         if (o.id === me.id || !o.barrel || o.barrel.value !== barrelDef.value) return
         const pen = o.barrel.fallPenalty
-        o.score = clampScore(o.score - pen, settings)
+        o.score = clampScore(o.score - pen)
         o.barrel = null
         o.stats.penalties += 1
         knockedOff.add(o.id)
@@ -396,7 +396,7 @@ export function resolveTurn(game, action) {
       if (o.id === me.id || knockedOff.has(o.id) || o.barrel) return
       const oBefore = scoresBefore.get(o.id)
       if (oBefore > 0 && me.score === oBefore) {
-        o.score = clampScore(o.score - settings.backstab.penalty, settings)
+        o.score = clampScore(o.score - settings.backstab.penalty)
         o.stats.penalties += 1
         me.stats.backstabs += 1
         push(o.id, 'backstab', -settings.backstab.penalty, { note: `Сравнялся: ${me.name}` })
