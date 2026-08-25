@@ -15,7 +15,9 @@
     "check-build": "node tools/check-build.mjs",
     "single": "npm run build && node tools/build-single.mjs",
     "check-single": "node tools/check-single.mjs",
-    "tg": "node tools/tg-setup.mjs"
+    "tg": "node tools/tg-setup.mjs",
+    "check-board": "node tools/check-board.mjs",
+    "check-finale": "node tools/check-finale.mjs"
   },
   "dependencies": {
     "react": "19.2.8",

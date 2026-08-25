@@ -47,6 +47,8 @@ const snapshot = (s) => ({
   turnIndex: s.turnIndex,
   round: s.round,
   winnerId: s.winnerId,
+  winners: [...s.winners],
+  finaleLeft: s.finaleLeft,
   screen: s.screen,
 })
 
@@ -54,7 +56,7 @@ export const useGameStore = create()(
   persist(
     (set, get) => ({
       // ─────────── экран ───────────
-      screen: 'menu', // menu | codex | game | victory
+      screen: 'menu', // menu | codex | rules | game | victory
       /** Кодекс должны хотя бы раз открыть — только потом снимаем якорь. */
       codexSeen: false,
 
@@ -67,7 +69,15 @@ export const useGameStore = create()(
       entries: [],
       turnIndex: 0,
       round: 1,
+      /** Кто взял сундук первым — его и помечаем в итогах. */
       winnerId: null,
+      /** Все, кто успел взять сундук: в последнем круге их может быть несколько. */
+      winners: [],
+      /**
+       * Сколько ходов осталось до конца партии.
+       * null — финал не начат; число — идёт последний круг.
+       */
+      finaleLeft: null,
 
       // ─────────── ход ───────────
       pad: '',
@@ -81,6 +91,7 @@ export const useGameStore = create()(
 
       // ═════════ ЭКРАНЫ ═════════
       openCodex: () => set({ screen: 'codex', codexSeen: true }),
+      openRules: () => set({ screen: 'rules' }),
       toMenu: () => set({ screen: 'menu' }),
 
       // ═════════ КОМАНДА ═════════
@@ -170,6 +181,8 @@ export const useGameStore = create()(
           turnIndex: 0,
           round: 1,
           winnerId: null,
+          winners: [],
+          finaleLeft: null,
           pad: '',
           history: [],
         })
@@ -186,7 +199,7 @@ export const useGameStore = create()(
       // ═════════ ЗАПИСЬ В СВИТОК ═════════
       commit: (action) => {
         const s = get()
-        if (s.winnerId) return
+        if (s.screen === 'victory') return
         const g = {
           settings: s.settings,
           players: s.players,
@@ -197,22 +210,51 @@ export const useGameStore = create()(
         }
         const r = resolveTurn(g, action)
         const entries = s.entries.map((e) => (r.crossIds.includes(e.id) ? { ...e, crossed: true } : e))
-        const turn = r.winnerId ? { turnIndex: s.turnIndex, round: s.round } : advanceTurn(g)
+
+        /*
+         * ФИНАЛ.
+         * Взятый сундук партию не обрывает: у остальных есть ровно по одному
+         * последнему ходу, чтобы догнать. Кто успеет — тоже победитель,
+         * но первым помечается тот, кто дошёл раньше.
+         */
+        const finaleWasOn = s.finaleLeft !== null
+        let winners = s.winners
+        let winnerId = s.winnerId
+        let finaleLeft = finaleWasOn ? s.finaleLeft - 1 : null
+
+        const wonNow = r.winnerId && !winners.includes(r.winnerId)
+        if (wonNow) {
+          winners = [...winners, r.winnerId]
+          if (!winnerId) {
+            winnerId = r.winnerId
+            // по одному последнему ходу каждому, кроме самого победителя
+            finaleLeft = s.players.length - 1
+          }
+        }
+
+        const over = finaleLeft !== null && finaleLeft <= 0
+        const turn = over ? { turnIndex: s.turnIndex, round: s.round } : advanceTurn(g)
 
         set({
           history: [...s.history, snapshot(s)].slice(-UNDO_DEPTH),
           players: r.players,
           entries: [...entries, ...r.newEntries],
-          winnerId: r.winnerId,
+          winnerId,
+          winners,
+          finaleLeft,
           turnIndex: turn.turnIndex,
           round: turn.round,
           pad: '',
-          screen: r.winnerId ? 'victory' : 'game',
+          screen: over ? 'victory' : 'game',
         })
 
         r.events.forEach(emit)
-        if (r.winnerId) get().recordGlory(r.players, r.winnerId)
+        if (wonNow && !over) emit({ type: 'finale' })
+        if (over) get().recordGlory(r.players, winners)
       },
+
+      /** Идёт ли последний круг. */
+      inFinale: () => get().finaleLeft !== null,
 
       /** Записать набранное золото. */
       writeScore: () => {
@@ -275,8 +317,8 @@ export const useGameStore = create()(
         if (glory && Object.keys(glory).length) set({ glory })
       },
 
-      recordGlory: (players, winnerId) => {
-        const glory = tallyGame(get().glory, players, winnerId)
+      recordGlory: (players, winners) => {
+        const glory = tallyGame(get().glory, players, winners)
         set({ glory })
         saveGlory(glory)
       },
@@ -302,6 +344,8 @@ export const useGameStore = create()(
           turnIndex: 0,
           round: 1,
           winnerId: null,
+          winners: [],
+          finaleLeft: null,
           pad: '',
           history: [],
         })),
@@ -313,6 +357,8 @@ export const useGameStore = create()(
             ? s.players.map((p) => ({ name: p.name, race: p.race || 'orc' }))
             : s.roster,
           winnerId: null,
+          winners: [],
+          finaleLeft: null,
           pad: '',
         })),
 
@@ -327,7 +373,7 @@ export const useGameStore = create()(
       storage: createJSONStorage(() => localStorage),
       partialize: (s) => ({
         // «Кодекс» — не место для возврата: после перезапуска встаём в меню
-        screen: s.screen === 'codex' ? 'menu' : s.screen,
+        screen: s.screen === 'codex' || s.screen === 'rules' ? 'menu' : s.screen,
         codexSeen: s.codexSeen,
         roster: s.roster,
         settings: s.settings,
@@ -336,6 +382,8 @@ export const useGameStore = create()(
         turnIndex: s.turnIndex,
         round: s.round,
         winnerId: s.winnerId,
+        winners: s.winners,
+        finaleLeft: s.finaleLeft,
         muted: s.muted,
         voicePack: s.voicePack,
         glory: s.glory,

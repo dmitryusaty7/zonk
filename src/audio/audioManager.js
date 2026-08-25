@@ -33,6 +33,7 @@ export const EVENT_MAP = {
   overshoot: { sound: 'bolt', voice: 'overshoot' },
   noEntry: { sound: 'bolt', voice: 'noEntry' },
   win: { sound: 'horn', voice: 'win', shake: 2 },
+  finale: { sound: 'barrel', shake: 2 },
   undo: { sound: 'scrape' },
   click: { sound: 'click' },
 }

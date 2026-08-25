@@ -15,7 +15,7 @@ function ScoreLine({ entry }) {
   // иначе рама налезает на соседние строки.
   if (entry.barrel) {
     return (
-      <div className="scroll-line ink-in flex flex-col items-center gap-1 px-1 py-2">
+      <div className="scroll-line barrel-in flex flex-col items-center gap-1 px-1 py-2">
         <span className="on-barrel num px-2 py-0.5 text-[29px] leading-none">
           {entry.total}
         </span>
@@ -34,7 +34,7 @@ function ScoreLine({ entry }) {
 /** Ржавый крючок — пустой бросок. */
 function BoltLine() {
   return (
-    <div className="scroll-line ink-in flex h-[38px] items-center justify-center px-1">
+    <div className="scroll-line hook-in flex h-[38px] items-center justify-center px-1">
       <span className="bolt-hook" role="img" aria-label="Ржавый крючок" />
     </div>
   )
@@ -47,7 +47,7 @@ function CrossedBolts({ count }) {
       {Array.from({ length: count }, (_, i) => (
         <BoltLine key={i} />
       ))}
-      <span className="bolt-cross" aria-hidden="true" />
+      <span className="bolt-cross net-in" aria-hidden="true" />
       <span className="sr-only">Сеть порвана: {count} крючка перечёркнуты</span>
     </div>
   )
@@ -67,8 +67,10 @@ function PenaltyLine({ entry }) {
   }[entry.type]
 
   const positive = entry.delta > 0
+  // Гарпун, сброс с бочки и падение — это удары: строка дёргается
+  const hit = ['backstab', 'knockOff', 'barrelFall', 'wagon'].includes(entry.type)
   return (
-    <div className="scroll-line ink-in flex flex-col items-center px-1 py-1">
+    <div className={`scroll-line flex flex-col items-center px-1 py-1 ${hit ? 'jab-in' : 'ink-in'}`}>
       <span className="tiny text-[11px] leading-none text-blood/85">{mark}</span>
       <span
         className={`num text-[27px] leading-none ${positive ? 'text-moss' : 'text-blood'}`}

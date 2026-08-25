@@ -8,6 +8,7 @@ import { audio } from './audio/audioManager.js'
 import { initTelegram, backButton } from './tma/telegram.js'
 import MenuScreen from './components/MenuScreen.jsx'
 import CodexScreen from './components/CodexScreen.jsx'
+import RulesScreen from './components/RulesScreen.jsx'
 import GameScreen from './components/GameScreen.jsx'
 import VictoryScreen from './components/VictoryScreen.jsx'
 import Toast from './components/Toast.jsx'
@@ -55,7 +56,7 @@ export default function App() {
   // Кнопка «назад» в шапке Telegram ведёт туда же, куда и по смыслу экрана
   useEffect(() => {
     if (screen === 'menu') return backButton(false)
-    const back = screen === 'codex' ? toMenu : toShore
+    const back = screen === 'codex' || screen === 'rules' ? toMenu : toShore
     return backButton(true, back)
   }, [screen, toMenu, toShore])
 
@@ -63,6 +64,7 @@ export default function App() {
     <>
       {screen === 'menu' && <MenuScreen />}
       {screen === 'codex' && <CodexScreen />}
+      {screen === 'rules' && <RulesScreen />}
       {screen === 'game' && <GameScreen />}
       {screen === 'victory' && <VictoryScreen />}
       <Toast />

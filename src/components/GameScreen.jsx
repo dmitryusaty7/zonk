@@ -10,7 +10,7 @@ import PlayerScroll from './PlayerScroll.jsx'
 import InputPad from './InputPad.jsx'
 import SettingsPanel from './SettingsPanel.jsx'
 import { Modal, tap, Emblem, Stepper, Coin } from './ui.jsx'
-import { TERMS } from '../data/lore.js'
+import { TERMS, plural, TURNS } from '../data/lore.js'
 
 /* ─────────────────────── ЛЕТОПИСЬ СОБЫТИЙ ─────────────────────── */
 
@@ -83,6 +83,7 @@ export default function GameScreen() {
   const entries = useGameStore((s) => s.entries)
   const turnIndex = useGameStore((s) => s.turnIndex)
   const round = useGameStore((s) => s.round)
+  const finaleLeft = useGameStore((s) => s.finaleLeft)
   const boltsMax = useGameStore((s) => s.settings.bolts.perPenalty)
   const muted = useGameStore((s) => s.muted)
   const toggleMute = useGameStore((s) => s.toggleMute)
@@ -132,8 +133,19 @@ export default function GameScreen() {
           Журнал
         </button>
 
-        <span className="goth flex-1 text-center text-[24px] leading-none text-gold">
-          КРУГ {round}
+        <span className="flex-1 text-center leading-none">
+          {finaleLeft !== null ? (
+            <>
+              <span className="goth block text-[20px] leading-none text-blood-bright">
+                ПОСЛЕДНИЙ КРУГ
+              </span>
+              <span className="tiny block text-[12px] leading-tight text-lamp">
+                ОСТАЛОСЬ {finaleLeft} {plural(finaleLeft, TURNS).toUpperCase()}
+              </span>
+            </>
+          ) : (
+            <span className="goth text-[24px] leading-none text-gold">КРУГ {round}</span>
+          )}
         </span>
 
         <button

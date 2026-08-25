@@ -14,7 +14,7 @@ const LIFETIME = 3800
 /** События, ради которых стоит открывать рот. */
 const LOUD = new Set([
   'gameStart', 'bolt', 'boltPenalty', 'foul', 'barrelSit', 'barrelMiss', 'barrelFall',
-  'knockOff', 'wagon', 'backstab', 'overshoot', 'noEntry', 'win', 'undo', 'score', 'bigScore',
+  'knockOff', 'wagon', 'backstab', 'overshoot', 'noEntry', 'win', 'undo', 'score', 'bigScore', 'finale',
 ])
 
 export default function Toast() {

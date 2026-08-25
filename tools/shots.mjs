@@ -183,6 +183,18 @@ async function main() {
   const st1 = await state()
   await check(st1.screen === 'menu' && st1.codexSeen, 'после Кодекса вернулись на причал')
 
+  // ── 04b. Свод правил с отрисованными костями ──
+  await act('openRules')
+  await shot('04b-rules-combos')
+  const diceDrawn = await page.evaluate(() => document.querySelectorAll('.die').length)
+  await check(diceDrawn >= 30, 'комбинации показаны костями', `${diceDrawn} костей`)
+  await page.evaluate(() => {
+    const el = document.querySelector('main')
+    if (el) el.scrollTop = el.scrollHeight
+  })
+  await shot('04c-rules-special')
+  await act('toMenu')
+
   // ── 05. Стол ──
   await act('startGame')
   await shot('05-game-fresh')
@@ -243,9 +255,18 @@ async function main() {
   const st4 = await state()
   await check(st4.scores[0] === 1000, 'лишнее за борт: счёт ровно 1000', `${st4.scores[0]}`)
   await check(!!st4.winner, 'сундук забран')
-  await shot('11-victory')
+  // Сундук не обрывает партию: у соперника есть последний ход
+  await check(st4.screen === 'game', 'начался последний круг', `экран ${st4.screen}`)
+  await shot('11-finale')
 
-  const gloryNames = Object.keys((await state()).glory)
+  await act('padAdd', 50)
+  await act('writeScore')
+  await wait(400)
+  const st5 = await state()
+  await check(st5.screen === 'victory', 'после последнего круга — итоги', `экран ${st5.screen}`)
+  await shot('12-victory')
+
+  const gloryNames = Object.keys(st5.glory)
   await check(gloryNames.length > 0, 'слава записана', gloryNames.join(', '))
 
   // ── 12. Четверо за столом ──
@@ -261,12 +282,12 @@ async function main() {
   await act('padAdd', 100)
   await act('padAdd', 100)
   await act('writeScore')
-  await shot('12-four-players')
+  await shot('13-four-players')
 
   // ── 13. Узкий экран ──
   await page.setViewport({ width: 360, height: 640, deviceScaleFactor: 2, isMobile: true, hasTouch: true })
   await wait(320)
-  await shot('13-narrow-360')
+  await shot('14-narrow-360')
   await page.setViewport({ width: W, height: H, deviceScaleFactor: 2, isMobile: true, hasTouch: true })
 
   // ── Швартовка к Telegram ──

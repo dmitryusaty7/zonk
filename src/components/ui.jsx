@@ -163,6 +163,62 @@ export function Modal({ title, onClose, children, footer }) {
   )
 }
 
+/* ─────────────────────────── КОСТЬ ─────────────────────────── */
+
+/** Раскладка очков по сетке 3×3 — индексы горящих ячеек. */
+const PIPS = {
+  1: [4],
+  2: [0, 8],
+  3: [0, 4, 8],
+  4: [0, 2, 6, 8],
+  5: [0, 2, 4, 6, 8],
+  6: [0, 2, 3, 5, 6, 8],
+}
+
+/**
+ * Игральная кость: костяной квадрат с квадратными же очками.
+ *
+ * Размеры считаются в пикселях, а не процентами: на кости в 18 пикселей
+ * процентные отступы и зазоры схлопывали строки сетки в ноль, и очки
+ * пропадали. Заодно align-self не даёт флексу растянуть кость.
+ */
+export function Die({ n, size = 26 }) {
+  const on = new Set(PIPS[n] || [])
+  const pad = Math.max(2, Math.round(size * 0.14))
+  const gap = Math.max(1, Math.round(size * 0.06))
+  const cell = Math.max(1, (size - pad * 2 - gap * 2) / 3)
+  return (
+    <span
+      className="die"
+      style={{
+        width: size,
+        height: size,
+        padding: pad,
+        gap,
+        gridTemplateColumns: `repeat(3, ${cell}px)`,
+        gridTemplateRows: `repeat(3, ${cell}px)`,
+      }}
+      role="img"
+      aria-label={`кость ${n}`}
+    >
+      {Array.from({ length: 9 }, (_, i) => (
+        <i key={i} className={on.has(i) ? 'pip on' : 'pip'} />
+      ))}
+    </span>
+  )
+}
+
+/** Несколько костей подряд — пример комбинации. */
+export function Dice({ values, size = 26 }) {
+  return (
+    <>
+      {values.map((n, i) => (
+        <Die key={i} n={n} size={size} />
+      ))}
+    </>
+  )
+}
+
 /* ─────────────────────────── ЗЛАТОЙ ─────────────────────────── */
 
 /** Монета — знак валюты кабака. */

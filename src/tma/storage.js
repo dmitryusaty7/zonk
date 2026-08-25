@@ -83,17 +83,19 @@ export async function saveGlory(glory) {
 }
 
 /**
- * Учесть партию: победителю плюс победа, всем — плюс игра.
- * Считаем по имени персонажа, как и просили.
+ * Учесть партию: победителям плюс победа, всем — плюс игра.
+ * В последнем круге сундук могут взять несколько человек, поэтому
+ * сюда приходит список, а не один игрок. Считаем по имени персонажа.
  */
-export function tallyGame(glory, players, winnerId) {
+export function tallyGame(glory, players, winners) {
+  const won = new Set(Array.isArray(winners) ? winners : [winners].filter(Boolean))
   const next = { ...glory }
   players.forEach((p) => {
     const name = (p.name || '').trim()
     if (!name) return
     const row = next[name] || { wins: 0, games: 0, best: 0 }
     next[name] = {
-      wins: row.wins + (p.id === winnerId ? 1 : 0),
+      wins: row.wins + (won.has(p.id) ? 1 : 0),
       games: row.games + 1,
       best: Math.max(row.best, p.score),
       race: p.race || row.race,

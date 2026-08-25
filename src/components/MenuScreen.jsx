@@ -73,6 +73,7 @@ function GloryModal({ onClose }) {
 export default function MenuScreen() {
   const [glory, setGlory] = useState(false)
   const openCodex = useGameStore((s) => s.openCodex)
+  const openRules = useGameStore((s) => s.openRules)
   const startGame = useGameStore((s) => s.startGame)
   const codexSeen = useGameStore((s) => s.codexSeen)
   const roster = useGameStore((s) => s.roster)
@@ -146,17 +147,29 @@ export default function MenuScreen() {
           {TERMS.codex}
         </button>
 
-        <button
-          type="button"
-          className="btn w-full py-3 text-[17px] leading-none"
-          onClick={() => {
-            tap()
-            setGlory(true)
-          }}
-        >
-          {TERMS.glory}
-          {gloryCount > 0 && <span className="text-gold"> · {gloryCount}</span>}
-        </button>
+        <div className="grid grid-cols-2 gap-1.5">
+          <button
+            type="button"
+            className="btn py-3 text-[17px] leading-none"
+            onClick={() => {
+              tap()
+              openRules()
+            }}
+          >
+            Правила
+          </button>
+          <button
+            type="button"
+            className="btn py-3 text-[17px] leading-none"
+            onClick={() => {
+              tap()
+              setGlory(true)
+            }}
+          >
+            {TERMS.glory}
+            {gloryCount > 0 && <span className="text-gold"> · {gloryCount}</span>}
+          </button>
+        </div>
 
         <button
           type="button"

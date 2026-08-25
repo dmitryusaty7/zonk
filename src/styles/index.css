@@ -225,6 +225,24 @@
     filter: saturate(0.85) contrast(1.1) drop-shadow(0 var(--px) 0 rgba(7, 13, 16, 0.7));
   }
 
+  /* Кость: костяной квадрат, очки — тоже квадраты, без единого скругления */
+  .die {
+    display: inline-grid;
+    box-sizing: border-box;
+    flex: none;
+    align-self: flex-start;
+    background: var(--color-bone);
+    box-shadow:
+      0 0 0 var(--px) var(--color-ink-deep),
+      inset calc(-1 * var(--px)) calc(-1 * var(--px)) 0 0 rgba(7, 13, 16, 0.28);
+  }
+  .die .pip {
+    background: transparent;
+  }
+  .die .pip.on {
+    background: var(--color-ink-deep);
+  }
+
   /* Золотой — монета рядом с числом */
   .coin {
     display: inline-block;
@@ -542,12 +560,98 @@ html.is-shaking body {
   animation: shake 0.4s steps(2, end);
 }
 
+/* Запись в свиток: число прилетает сверху и впечатывается */
 @keyframes ink-in {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+  0% { opacity: 0; transform: translateY(-10px) scale(1.35); }
+  60% { opacity: 1; transform: translateY(0) scale(1.12); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 .ink-in {
-  animation: ink-in 0.18s steps(3, end);
+  animation: ink-in 0.26s steps(4, end);
+}
+
+/* Крючок падает на леске и качается */
+@keyframes hook-swing {
+  0% { opacity: 0; transform: translateY(-14px) rotate(-16deg); }
+  45% { opacity: 1; transform: translateY(0) rotate(10deg); }
+  75% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+.hook-in .bolt-hook {
+  animation: hook-swing 0.42s steps(5, end);
+}
+
+/* Сеть рвётся: крест прочерчивается от середины */
+@keyframes net-tear {
+  0% { opacity: 0; transform: scale(0.15); }
+  70% { opacity: 1; transform: scale(1.08); }
+  100% { opacity: 0.92; transform: scale(1); }
+}
+.net-in {
+  animation: net-tear 0.38s steps(5, end);
+}
+
+/* Бочка: золотое кольцо вспыхивает при посадке */
+@keyframes barrel-pop {
+  0% { transform: scale(0.7); filter: brightness(2.2); }
+  55% { transform: scale(1.14); filter: brightness(1.6); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+.barrel-in {
+  animation: barrel-pop 0.44s steps(5, end);
+}
+
+/* Гарпун и прочие удары — запись дёргается вбок */
+@keyframes jab {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-7px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-3px); }
+}
+.jab-in {
+  animation: jab 0.34s steps(4, end);
+}
+
+/* Свиток стал активным — рамка коротко вспыхивает */
+@keyframes turn-pass {
+  0% { box-shadow: 0 0 0 3px var(--color-orc-bright), 0 0 0 7px var(--color-ink-deep), 0 0 0 16px rgba(63, 240, 208, 0.5), 0 0 46px 6px rgba(63, 240, 208, 0.75); }
+  100% { box-shadow: 0 0 0 3px var(--color-orc-bright), 0 0 0 7px var(--color-ink-deep), 0 0 0 9px rgba(63, 240, 208, 0.45), 0 0 34px 2px rgba(63, 240, 208, 0.5); }
+}
+.active-scroll {
+  animation: turn-pass 0.4s steps(4, end);
+}
+
+/* Сундук взят: экран заливает золотом */
+@keyframes chest-burst {
+  0% { opacity: 0; }
+  20% { opacity: 0.85; }
+  100% { opacity: 0; }
+}
+.chest-burst::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  background: radial-gradient(60% 40% at 50% 30%, rgba(255, 233, 160, 0.9), transparent 70%);
+  animation: chest-burst 0.9s steps(6, end);
+}
+
+/* Монеты сыплются по итоговому экрану */
+@keyframes coin-fall {
+  0% { opacity: 0; transform: translateY(-40px) rotate(0deg); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(70vh) rotate(320deg); }
+}
+.coin-rain i {
+  position: absolute;
+  top: -24px;
+  width: 14px;
+  height: 14px;
+  background-image: url('/icons/coin.png');
+  background-size: contain;
+  image-rendering: pixelated;
+  animation: coin-fall 2.4s steps(12, end) forwards;
 }
 
 @keyframes toast-in {
@@ -570,6 +674,13 @@ html.is-shaking body {
 @media (prefers-reduced-motion: reduce) {
   html.is-shaking body,
   .ink-in,
+  .hook-in .bolt-hook,
+  .net-in,
+  .barrel-in,
+  .jab-in,
+  .active-scroll,
+  .chest-burst::after,
+  .coin-rain i,
   .toast-in,
   .torch {
     animation: none;

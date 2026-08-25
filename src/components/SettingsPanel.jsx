@@ -4,8 +4,8 @@
  * до начала игры и во время неё (из меню).
  */
 import { useGameStore } from '../store/gameStore.js'
-import { RULE_HINTS, VOICE_PACKS } from '../data/lore.js'
-import { Rubric, Stepper, Latch, Choice, tap } from './ui.jsx'
+import { RULE_HINTS } from '../data/lore.js'
+import { Rubric, Stepper, Latch, tap } from './ui.jsx'
 
 export default function SettingsPanel({ locked = false }) {
   const s = useGameStore((st) => st.settings)
@@ -14,8 +14,6 @@ export default function SettingsPanel({ locked = false }) {
   const removeBarrel = useGameStore((st) => st.removeBarrel)
   const updateBarrel = useGameStore((st) => st.updateBarrel)
   const resetSettings = useGameStore((st) => st.resetSettings)
-  const voicePack = useGameStore((st) => st.voicePack)
-  const setVoicePack = useGameStore((st) => st.setVoicePack)
 
   return (
     <div className="pb-4">
@@ -28,7 +26,6 @@ export default function SettingsPanel({ locked = false }) {
       {/* ── ЦЕЛЬ ── */}
       <Rubric hint={RULE_HINTS.targetScore}>Главный Сундук</Rubric>
       <Stepper label="Собрать золота" value={s.targetScore} onChange={(v) => setSetting('targetScore', v)} step={50} min={100} max={9999} />
-      <Latch label="Только точное попадание" checked={s.exactFinish} onChange={(v) => setSetting('exactFinish', v)} hint={RULE_HINTS.exactFinish} />
 
       {/* ── ПОДАТЬ ── */}
       <Rubric hint={RULE_HINTS.entryScore}>Общак</Rubric>
@@ -122,30 +119,6 @@ export default function SettingsPanel({ locked = false }) {
           </span>
         </div>
       ))}
-
-      {/* ── ПРОЧЕЕ ── */}
-      <Rubric>Прочее</Rubric>
-      <Choice
-        label="Шаг счёта"
-        value={s.scoreStep}
-        onChange={(v) => setSetting('scoreStep', v)}
-        options={[
-          { value: 5, label: 'по 5' },
-          { value: 10, label: 'по 10' },
-          { value: 1, label: 'любой' },
-        ]}
-      />
-      <p className="mb-2 text-[13px] leading-tight text-parch-dark">{RULE_HINTS.scoreStep}</p>
-      <Latch label="Пускать счёт ниже нуля" checked={s.allowNegative} onChange={(v) => setSetting('allowNegative', v)} hint={RULE_HINTS.allowNegative} />
-      <Choice
-        label="Голоса"
-        value={voicePack}
-        onChange={setVoicePack}
-        options={Object.entries(VOICE_PACKS).map(([value, p]) => ({ value, label: p.label }))}
-      />
-      <p className="mt-1 text-[13px] leading-tight text-parch-dark">
-        Стук костей и кружек встроены. Басистый голос орка-пирата — свои файлы в public/sounds/voice/pirate/, см. README.
-      </p>
 
       <button
         type="button"
